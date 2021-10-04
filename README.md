@@ -1,2 +1,2 @@
-# Template
-Super template for super plugins.
+# CinematicCore
+Plugin to make smooth cinematics.
