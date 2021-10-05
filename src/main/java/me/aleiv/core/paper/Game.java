@@ -1,33 +1,79 @@
 package me.aleiv.core.paper;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import me.aleiv.core.paper.events.GameTickEvent;
+import me.aleiv.core.paper.objects.Cinematic;
+import me.aleiv.core.paper.objects.Frame;
+import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Game extends BukkitRunnable {
+public class Game{
     Core instance;
 
-    long gameTime = 0;
-    long startTime = 0;
+    Boolean globalmute = false;
 
+    HashMap<String, Cinematic> cinematics = new HashMap<>();
+    HashMap<UUID, Cinematic> recording = new HashMap<>();
+    
     public Game(Core instance) {
         this.instance = instance;
-        this.startTime = System.currentTimeMillis();
+    }
+
+    public void sendBlack(){
+        String black = Character.toString('\u3400');
+        Bukkit.getOnlinePlayers().forEach(p ->{
+            instance.showTitle(p, black, "", 100, 20, 100);
+        });
+    }
+
+    public void hide(boolean bool){
+
+        if(bool){
+            Bukkit.getOnlinePlayers().forEach(p1 ->{
+                Bukkit.getOnlinePlayers().forEach(p2 ->{
+                    p1.hidePlayer(instance, p2);
+                });
+            });
+        }else{
+            Bukkit.getOnlinePlayers().forEach(p1 ->{
+                Bukkit.getOnlinePlayers().forEach(p2 ->{
+                    p1.showPlayer(instance, p2);
+                });
+            });
+        }
 
     }
 
-    @Override
-    public void run() {
+    public BukkitTCT play(BukkitTCT task, List<Player> players, List<Frame> frames) {
 
-        var new_time = (int) (Math.floor((System.currentTimeMillis() - startTime) / 1000.0));
+        frames.forEach(frame -> {
+            var world = Bukkit.getWorld(frame.getWorld());
+            var loc = new Location(world, frame.getX(), frame.getY(), frame.getZ(), frame.getYaw(), frame.getPitch());
 
-        gameTime = new_time;
+            task.addWithDelay(new BukkitRunnable() {
+                @Override
+                public void run() {
+                    players.forEach(p -> {
+                        p.teleport(loc);
+                    });
+                }
 
-        Bukkit.getPluginManager().callEvent(new GameTickEvent(new_time, true));
+            }, 50);
+        });
+
+        return task;
+
     }
+
+
 }
