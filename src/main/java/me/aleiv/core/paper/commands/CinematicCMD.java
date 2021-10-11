@@ -18,8 +18,10 @@ import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.objects.Cinematic;
+import me.aleiv.core.paper.objects.Frame;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
+
 
 @CommandAlias("cinematic|c")
 @CommandPermission("cinematic.cmd")
@@ -51,50 +53,8 @@ public class CinematicCMD extends BaseCommand {
         }
     }
 
-    @Subcommand("rec-add")
-    public void recAdd(Player sender, String cinematic) {
-
-        var game = instance.getGame();
-        var cinematics = game.getCinematics();
-
-        if (!cinematics.containsKey(cinematic)) {
-            sender.sendMessage(ChatColor.RED + "Cinematic doesn't exist.");
-
-        } else {
-
-            var task = new BukkitTCT();
-
-            var count = 3;
-            while (count >= 0) {
-                final var c = count;
-
-                task.addWithDelay(new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        if (c == 0) {
-                            sender.sendMessage(ChatColor.DARK_RED + "REC.");
-                            sender.playSound(sender.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
-                            var cine = cinematics.get(cinematic);
-                            game.getRecording().put(sender.getUniqueId(), cine);
-
-                        } else {
-                            sender.sendMessage(ChatColor.DARK_RED + "" + c);
-                            sender.playSound(sender.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
-                        }
-                    }
-
-                }, 50 * 20);
-
-                count--;
-            }
-
-            task.execute();
-
-        }
-    }
-
     @Subcommand("rec")
-    public void rec(Player sender, String cinematic) {
+    public void rec(Player sender, String cinematic){
 
         var game = instance.getGame();
         var cinematics = game.getCinematics();
@@ -117,6 +77,58 @@ public class CinematicCMD extends BaseCommand {
                             sender.sendMessage(ChatColor.DARK_RED + "REC.");
                             sender.playSound(sender.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
                             game.getRecording().put(sender.getUniqueId(), new Cinematic(cinematic));
+
+                        } else {
+                            sender.sendMessage(ChatColor.DARK_RED + "" + c);
+                            sender.playSound(sender.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
+                        }
+                    }
+
+                }, 50 * 20);
+
+                count--;
+            }
+
+            task.execute();
+
+        }
+    }
+
+    @Subcommand("rec-static")
+    public void recStatic(Player sender, String cinematic, Integer ticks) {
+
+        var game = instance.getGame();
+        var cinematics = game.getCinematics();
+
+        if (cinematics.containsKey(cinematic)) {
+            sender.sendMessage(ChatColor.RED + "Cinematic already exist.");
+
+        } else {
+
+            var task = new BukkitTCT();
+
+            var count = 3;
+            while (count >= 0) {
+                final var c = count;
+
+                task.addWithDelay(new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (c == 0) {
+                            sender.sendMessage(ChatColor.DARK_RED + "REC. " + ticks + " ticks.");
+                            sender.playSound(sender.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
+
+                            List<Frame> frames = new ArrayList<>();
+                            var loc = sender.getLocation();
+
+                            for (int i = 0; i < ticks; i++) {
+
+                                var frame = new Frame(loc.getWorld().getName().toString(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
+                                frames.add(frame);
+                            }
+
+                            cinematics.put(cinematic, new Cinematic(cinematic, frames));
+
 
                         } else {
                             sender.sendMessage(ChatColor.DARK_RED + "" + c);
@@ -214,6 +226,16 @@ public class CinematicCMD extends BaseCommand {
 
     }
 
+    @Subcommand("list")
+    public void list(CommandSender sender) {
+        var game = instance.getGame();
+        var cinematics = game.getCinematics().keySet();
+        sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic list: " + ChatColor.WHITE + cinematics.toString());
+
+    }
+
+    
+
     @Subcommand("play")
     public void playCinematic(CommandSender sender, String cinematic) {
 
@@ -247,4 +269,54 @@ public class CinematicCMD extends BaseCommand {
 
     }
 
+    @Subcommand("merge")
+    public void merge(CommandSender sender, String name, String cinematic1, String cinematic2) {
+        var game = instance.getGame();
+        var cinematics = game.getCinematics();
+        if(!cinematics.containsKey(cinematic1) || !cinematics.containsKey(cinematic2)){
+            sender.sendMessage(ChatColor.RED + "Cinematic doesn't exist.");
+
+        }else{
+            var cine1 = cinematics.get(cinematic1);
+            var cine2 = cinematics.get(cinematic2);
+
+            var frames1 = cine1.getFrames();
+            var frames2 = cine2.getFrames();
+
+            List<Frame> frames = new ArrayList<>();
+            frames.addAll(frames1);
+            frames.addAll(frames2);
+
+            cinematics.remove(cinematic1);
+            cinematics.remove(cinematic2);
+            cinematics.put(name, new Cinematic(name, frames));
+            
+            sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic1 + " and " + cinematic2 + " merged.");
+
+        }
+
+    }
+
+    @Subcommand("rename")
+    public void rename(CommandSender sender, String cinematic, String name) {
+        var game = instance.getGame();
+        var cinematics = game.getCinematics();
+        if(!cinematics.containsKey(cinematic)){
+            sender.sendMessage(ChatColor.RED + "Cinematic doesn't exist.");
+
+        }else if(cinematics.containsKey(name)){
+            sender.sendMessage(ChatColor.RED + "Cinematic already exist.");
+
+        }else{
+            var cine = cinematics.get(cinematic);
+            cine.setName(name);
+
+            cinematics.remove(cinematic);
+            cinematics.put(name, cine);
+            
+            sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic + " renamed to " + name);
+
+        }
+    }
+    
 }
