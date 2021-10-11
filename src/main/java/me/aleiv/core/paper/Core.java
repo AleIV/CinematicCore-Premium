@@ -17,10 +17,12 @@ import me.aleiv.core.paper.commands.CinematicCMD;
 import me.aleiv.core.paper.listeners.GlobalListener;
 import me.aleiv.core.paper.objects.Cinematic;
 import me.aleiv.core.paper.utilities.JsonConfig;
+import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.Title.Times;
+import us.jcedeno.libs.rapidinv.RapidInvManager;
 
 
 @SpigotPlugin
@@ -37,6 +39,9 @@ public class Core extends JavaPlugin {
         instance = this;
 
         game = new Game(this);
+
+        RapidInvManager.register(this);
+        BukkitTCT.registerPlugin(this);
 
         //LISTENERS
 

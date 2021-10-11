@@ -18,7 +18,6 @@ import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.objects.Cinematic;
-import me.aleiv.core.paper.objects.Frame;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
 
@@ -31,34 +30,6 @@ public class CinematicCMD extends BaseCommand {
     public CinematicCMD(Core instance) {
         this.instance = instance;
 
-    }
-
-    public void record(Player player, List<Frame> frames, int seconds) {
-        var task = new BukkitTCT();
-
-        var count = 0;
-        for (int i = 0; i < seconds; i++) {
-            for (int j = 0; j < 20; j++) {
-
-                var c = (int) count / 20;
-                task.addWithDelay(new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        instance.sendActionBar(player, ChatColor.YELLOW + "" + c + "/" + seconds);
-                        var loc = player.getLocation().clone();
-                        var frame = new Frame(loc.getWorld().getName().toString(), loc.getX(), loc.getY(), loc.getZ(),
-                                loc.getYaw(), loc.getPitch());
-                        frames.add(frame);
-                    }
-
-                }, 50);
-
-                count++;
-            }
-
-        }
-
-        task.execute();
     }
 
     @Subcommand("stop")
@@ -222,24 +193,6 @@ public class CinematicCMD extends BaseCommand {
             }, ((50 * integer) + 50 * 110) - (50 * 110));
         }
 
-        var last = instance.getGame().getCinematics().get("41");
-        var frames = last.getFrames();
-        var frame = frames.get(frames.size() - 1);
-        var loc = new Location(Bukkit.getWorld(frame.getWorld()), frame.getX(), frame.getY(), frame.getZ(),
-                frame.getYaw(), frame.getPitch());
-
-        for (int i = 0; i < 800; i++) {
-            task.addWithDelay(new BukkitRunnable() {
-                @Override
-                public void run() {
-                    players.forEach(p -> {
-                        p.teleport(loc);
-                    });
-                }
-
-            }, 50);
-        }
-
         task.execute();
         task2.execute();
 
@@ -277,6 +230,19 @@ public class CinematicCMD extends BaseCommand {
             players.forEach(p -> p.setGameMode(GameMode.SPECTATOR));
             game.play(new BukkitTCT(), players, frames).execute();
 
+        }
+
+    }
+
+    @Subcommand("delete")
+    public void delete(CommandSender sender, String cinematic) {
+        var game = instance.getGame();
+        var cinematics = game.getCinematics();
+        if(!cinematics.containsKey(cinematic)){
+            sender.sendMessage(ChatColor.RED + "Cinematic doesn't exist.");
+        }else{
+            cinematics.remove(cinematic);
+            sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic + " deleted.");
         }
 
     }
