@@ -152,7 +152,6 @@ public class CinematicCMD extends BaseCommand {
         var game = instance.getGame();
         var cinematics = game.getCinematics();
         var task = new BukkitTCT();
-        game.hide(true);
 
         List<Integer> list = new ArrayList<>();
 
