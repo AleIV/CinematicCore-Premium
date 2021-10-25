@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,11 +13,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import me.aleiv.core.paper.events.CinematicFinishEvent;
+import me.aleiv.core.paper.events.CinematicStartEvent;
+import me.aleiv.core.paper.events.GameTickEvent;
 import me.aleiv.core.paper.listeners.RecordingListener;
 import me.aleiv.core.paper.objects.Cinematic;
 import me.aleiv.core.paper.objects.CinematicProgress;
 import me.aleiv.core.paper.objects.Frame;
-import me.aleiv.core.paper.objects.GameTickEvent;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 
 @Data
@@ -33,6 +34,7 @@ public class Game extends BukkitRunnable {
     Boolean npcs = false;
     Boolean fade = true;
     Boolean autoHide = false;
+    Boolean restorePlayerInfo = true;
 
     RecordingListener recordingListener;
 
@@ -64,11 +66,16 @@ public class Game extends BukkitRunnable {
 
         List<Integer> list = new ArrayList<>();
 
-        sendBlack();
+        if(fade) sendBlack();
+
+        var scenes = Arrays.asList(cinematic).stream().map(name -> cinematics.get(name)).toList();
+        var actualCinematic = new CinematicProgress(scenes, players, gameTime, task);
+        cinematicProgressList.add(actualCinematic);
+
         task.addWithDelay(new BukkitRunnable() {
             @Override
             public void run() {
-
+                
             }
 
         }, 50 * 110);
@@ -76,12 +83,8 @@ public class Game extends BukkitRunnable {
         task.add(new BukkitRunnable() {
             @Override
             public void run() {
-                if(npcs){
-
-                }
-
-                players.forEach(player ->{
-
+                Bukkit.getScheduler().runTask(instance, Btask->{
+                    Bukkit.getPluginManager().callEvent(new CinematicStartEvent(actualCinematic, true));
                 });
             }
             
@@ -130,29 +133,12 @@ public class Game extends BukkitRunnable {
 
         var completable = task.execute();
 
-        var scenes = Arrays.asList(cinematic).stream().map(name -> cinematics.get(name)).toList();
-        var actualCinematic = new CinematicProgress(scenes, players, gameTime, task);
-        cinematicProgressList.add(actualCinematic);
-
-        instance.broadcastMessage("TEST STARTED");
-
-        CompletableFuture.supplyAsync(() -> {
-
-            manager.destroyTeam(team);
-
-            return true;
-        }).thenAccept(bool -> {
+        completable.thenAccept(bool -> {
             cinematicProgressList.remove(actualCinematic);
-            instance.broadcastMessage("TEST FINISHED");
+            Bukkit.getPluginManager().callEvent(new CinematicFinishEvent(actualCinematic, true));
 
         });
 
-        Bukkit.getScheduler().runTaskAsynchronously(instance, completableTask ->{
-            if(completable.isDone()){
-                cinematicProgressList.remove(actualCinematic);
-                instance.broadcastMessage("TEST FINISHED");
-            }
-        });
     }
 
     public void startRecord(Player player, String cinematic) {

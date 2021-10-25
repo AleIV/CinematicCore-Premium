@@ -20,9 +20,6 @@ import me.aleiv.core.paper.objects.Cinematic;
 import me.aleiv.core.paper.objects.Frame;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
-import us.jcedeno.libs.Npc;
-import us.jcedeno.libs.utils.NPCOptions;
-
 
 @CommandAlias("cinematic|c")
 @CommandPermission("cinematic.cmd")
@@ -36,17 +33,23 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Default
-    public void info(CommandSender sender){
-            sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic Tool");
-            sender.sendMessage(ChatColor.WHITE + "/cinematic record <cinematic name>" + ChatColor.AQUA + " Start a new recording.");
-            sender.sendMessage(ChatColor.WHITE + "/cinematic stop" + ChatColor.AQUA + " Stop and save the current record.");
-            sender.sendMessage(ChatColor.WHITE + "/cinematic record-static <cinematic name> <cinematic duration in ticks>" + ChatColor.AQUA + " Record static scene.");
-            sender.sendMessage(ChatColor.WHITE + "/cinematic list" + ChatColor.AQUA + " List of all scenes.");
-            sender.sendMessage(ChatColor.WHITE + "/cinematic delete <cinematic to delete>" + ChatColor.AQUA + " Delete a scene.");
-            sender.sendMessage(ChatColor.WHITE + "/cinematic merge <new cinematic> <cinematic1> <cinematic2>" + ChatColor.AQUA + " Merge 2 scenes.");
-            sender.sendMessage(ChatColor.WHITE + "/cinematic clone <cinematic to clone> <name of clone>" + ChatColor.AQUA + " Clone scene.");
-
-            
+    public void info(CommandSender sender) {
+        sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic Tool");
+        sender.sendMessage(
+                ChatColor.WHITE + "/cinematic record <scene name>" + ChatColor.AQUA + " Start a new scene recording.");
+        sender.sendMessage(ChatColor.WHITE + "/cinematic stop" + ChatColor.AQUA + " Stop and save the current scene record.");
+        sender.sendMessage(ChatColor.WHITE + "/cinematic record-static <scene name> <scene duration in ticks>"
+                + ChatColor.AQUA + " Record static scene.");
+        sender.sendMessage(ChatColor.WHITE + "/cinematic play <true for all players/false for sender> <list of scenes>..." + ChatColor.AQUA
+                + " Play final cinematic to sender or all players.");
+        sender.sendMessage(ChatColor.WHITE + "/cinematic list" + ChatColor.AQUA + " List of all scenes.");
+        sender.sendMessage(
+                ChatColor.WHITE + "/cinematic delete <scene to delete>" + ChatColor.AQUA + " Delete a scene.");
+        sender.sendMessage(ChatColor.WHITE + "/cinematic merge <new scene> <scene1> <scene2>"
+                + ChatColor.AQUA + " Merge 2 scenes.");
+        sender.sendMessage(ChatColor.WHITE + "/cinematic clone <scene to clone> <name of clone>" + ChatColor.AQUA
+                + " Clone scene.");
+        
     }
 
     @Subcommand("stop")
@@ -66,19 +69,19 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("rec|record")
-    public void rec(Player sender, String cinematic){
+    public void rec(Player sender, String cinematic) {
 
         var game = instance.getGame();
         var cinematics = game.getCinematics();
         var recording = game.getRecording();
 
-        if(!recording.isEmpty()){
+        if (!recording.isEmpty()) {
             sender.sendMessage(ChatColor.RED + "Someone is already recording.");
 
-        }else if (cinematics.containsKey(cinematic)) {
+        } else if (cinematics.containsKey(cinematic)) {
             sender.sendMessage(ChatColor.RED + "Cinematic already exist.");
 
-        }else {
+        } else {
 
             var task = new BukkitTCT();
 
@@ -117,13 +120,13 @@ public class CinematicCMD extends BaseCommand {
         var cinematics = game.getCinematics();
         var recording = game.getRecording();
 
-        if(!recording.isEmpty()){
+        if (!recording.isEmpty()) {
             sender.sendMessage(ChatColor.RED + "Someone is already recording.");
 
-        }else if (cinematics.containsKey(cinematic)) {
+        } else if (cinematics.containsKey(cinematic)) {
             sender.sendMessage(ChatColor.RED + "Cinematic already exist.");
 
-        }else {
+        } else {
 
             var task = new BukkitTCT();
 
@@ -139,7 +142,6 @@ public class CinematicCMD extends BaseCommand {
                             sender.playSound(sender.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
 
                             game.recordStatic(sender, cinematic, ticks);
-
 
                         } else {
                             sender.sendMessage(ChatColor.DARK_RED + "" + c);
@@ -161,14 +163,29 @@ public class CinematicCMD extends BaseCommand {
     public void play(Player sender, Boolean bool, String... cinematic) {
 
         var game = instance.getGame();
-        List<Player> players = new ArrayList<>();
-        if(bool){
-            players = Bukkit.getOnlinePlayers().stream().map(player -> (Player) player).toList();
-        }else{
-            players.add(sender);
+        var cinematics = game.getCinematics();
+        var allExist = true;
+
+        for (var name : cinematic) {
+            if(!cinematics.containsKey(name)){
+                allExist = false;
+            }
         }
 
-        game.play(players, cinematic);
+        if(!allExist){
+            sender.sendMessage(ChatColor.RED + "Cinematic doesn't exist.");
+
+        }else{
+            List<Player> players = new ArrayList<>();
+            if(bool){
+                players = Bukkit.getOnlinePlayers().stream().map(player -> (Player) player).toList();
+            }else{
+                players.add(sender);
+            }
+
+            game.play(players, cinematic);
+        }
+        
     }
 
     @Subcommand("globalmute")
@@ -176,6 +193,38 @@ public class CinematicCMD extends BaseCommand {
         var game = instance.getGame();
         game.setGlobalmute(!game.getGlobalmute());
         instance.adminMessage(ChatColor.DARK_AQUA + "Cinematic globalmute " + game.getGlobalmute());
+
+    }
+
+    @Subcommand("npcs")
+    public void npcs(CommandSender sender, Boolean bool) {
+        var game = instance.getGame();
+        game.setNpcs(bool);
+        instance.adminMessage(ChatColor.DARK_AQUA + "Cinematic npcs " + bool);
+
+    }
+
+    @Subcommand("fade")
+    public void fade(CommandSender sender, Boolean bool) {
+        var game = instance.getGame();
+        game.setFade(bool);
+        instance.adminMessage(ChatColor.DARK_AQUA + "Cinematic fade " + bool);
+
+    }
+
+    @Subcommand("autoHide")
+    public void autoHide(CommandSender sender, Boolean bool) {
+        var game = instance.getGame();
+        game.setAutoHide(bool);
+        instance.adminMessage(ChatColor.DARK_AQUA + "Cinematic autoHide " + bool);
+
+    }
+
+    @Subcommand("restorePlayerInfo")
+    public void restorePlayerInfo(CommandSender sender, Boolean bool) {
+        var game = instance.getGame();
+        game.setRestorePlayerInfo(bool);
+        instance.adminMessage(ChatColor.DARK_AQUA + "Cinematic restorePlayerInfo " + bool);
 
     }
 
@@ -191,7 +240,7 @@ public class CinematicCMD extends BaseCommand {
     public void list(CommandSender sender) {
         var game = instance.getGame();
         var cinematics = game.getCinematics().keySet();
-        sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic list: " + ChatColor.WHITE + cinematics.toString());
+        sender.sendMessage(ChatColor.DARK_AQUA + "Scene list: " + ChatColor.WHITE + cinematics.toString());
 
     }
 
@@ -199,9 +248,9 @@ public class CinematicCMD extends BaseCommand {
     public void delete(CommandSender sender, String cinematic) {
         var game = instance.getGame();
         var cinematics = game.getCinematics();
-        if(!cinematics.containsKey(cinematic)){
+        if (!cinematics.containsKey(cinematic)) {
             sender.sendMessage(ChatColor.RED + "Cinematic doesn't exist.");
-        }else{
+        } else {
             cinematics.remove(cinematic);
             sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic + " deleted.");
         }
@@ -212,10 +261,10 @@ public class CinematicCMD extends BaseCommand {
     public void merge(CommandSender sender, String name, String cinematic1, String cinematic2) {
         var game = instance.getGame();
         var cinematics = game.getCinematics();
-        if(!cinematics.containsKey(cinematic1) || !cinematics.containsKey(cinematic2)){
+        if (!cinematics.containsKey(cinematic1) || !cinematics.containsKey(cinematic2)) {
             sender.sendMessage(ChatColor.RED + "Cinematic doesn't exist.");
 
-        }else{
+        } else {
             var cine1 = cinematics.get(cinematic1);
             var cine2 = cinematics.get(cinematic2);
 
@@ -229,7 +278,7 @@ public class CinematicCMD extends BaseCommand {
             cinematics.remove(cinematic1);
             cinematics.remove(cinematic2);
             cinematics.put(name, new Cinematic(name, frames));
-            
+
             sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic1 + " and " + cinematic2 + " merged.");
 
         }
@@ -241,20 +290,20 @@ public class CinematicCMD extends BaseCommand {
         var game = instance.getGame();
         var cinematics = game.getCinematics();
 
-        if(!cinematics.containsKey(cinematic1)){
+        if (!cinematics.containsKey(cinematic1)) {
             sender.sendMessage(ChatColor.RED + "Cinematic doesn't exist.");
 
-        }else if(cinematics.containsKey(cinematic2)){
+        } else if (cinematics.containsKey(cinematic2)) {
             sender.sendMessage(ChatColor.RED + "Cinematic already exist.");
 
-        }else{
+        } else {
             var cine1 = cinematics.get(cinematic1);
 
             var list = cine1.getFrames().stream().toList();
             var cine2 = new Cinematic(cinematic2, list);
 
             cinematics.put(cinematic2, cine2);
-            
+
             sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic1 + " cloned in " + cinematic2);
 
         }
@@ -265,34 +314,22 @@ public class CinematicCMD extends BaseCommand {
     public void rename(CommandSender sender, String cinematic, String name) {
         var game = instance.getGame();
         var cinematics = game.getCinematics();
-        if(!cinematics.containsKey(cinematic)){
+        if (!cinematics.containsKey(cinematic)) {
             sender.sendMessage(ChatColor.RED + "Cinematic doesn't exist.");
 
-        }else if(cinematics.containsKey(name)){
+        } else if (cinematics.containsKey(name)) {
             sender.sendMessage(ChatColor.RED + "Cinematic already exist.");
 
-        }else{
+        } else {
             var cine = cinematics.get(cinematic);
             cine.setName(name);
 
             cinematics.remove(cinematic);
             cinematics.put(name, cine);
-            
+
             sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic + " renamed to " + name);
 
         }
     }
 
-    @Subcommand("test")
-    public void test(Player player){
-        var data = "ewogICJ0aW1lc3RhbXAiIDogMTYzNTEyMjQ3NDA3MSwKICAicHJvZmlsZUlkIiA6ICJmMDQ4OTFiNjNhMjI0OWMzYThjMGJkZjdlNDE1MjQzYSIsCiAgInByb2ZpbGVOYW1lIiA6ICJBbGVJViIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS85MGQyYTRkMDk2YzJmZDZiNWE3YjczMmM5M2Y2ZDY4Njc0OTg2Y2YwNDBmMzIzOTM0N2ZjMThlOTY1MjdkZTQ1IiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0";
-        var signature = "WK+dIe8oT8CQZGaBbt9aBTaUlhsvwKbBGIL1BDo2/RkQX5WWqXfwe95KdCSGqG7n9CK1Dv4GlLE31P7l/otycmoCUBKuVrOOG9BK2NKXLlUbUfios8giKuahUVCAoMnbaZPNZ8yzxaPV6FFo9SARRF/2x4QvlrqNKe7d5VcIwSBPd+0GQh5iiDT9Vw9rKk69YqhPXUtx5gQaFxUi5+PtIP310Lmfy4F6yJ2exmV8xGrL0hs6xo+H99M53zFnnQoreOK+ai9AKXbfCsx9dpBLTQIsuFE57V6HFZpm8LUvn7/IXCU6LPlVofyDYYVr+o6ze22RY1lEbWqv9nSiUvrRVwoovfgrwdER4M422xogRvcDrv/16FdmFbvvXg/ZsoPk39qcE5tMP+pyKL4QBv9Iwjqs01cNOQrRK1mRt19fNsz4/irJh45TxH1wMwammD1Y9He5NT30xZaI2R3iLv5S+b9pCqQ4XFinGCtaHRvWujdRPKoIVbceJ5mjZHUbgVwhcjgZLp+dyw0uBrWsSGJRWdUSRKEBIao9fE3pzIfgM2DsAwWigr1x5gpB0gO+APxL7xestL4GhbgWDBpzZU0EbhkOtz1GkPFb/CJkk/R/rl/FjmD8qWDYk5ljW0h1TS1ep0xC3kKG/zMAmWSnVkK1narSMjMGjrB4Z7UW1OvX0kk=";
-        var builder = NPCOptions.builder().name("").hideNametag(true).texture(data).signature(signature).location(player.getLocation()).build();
-        var npc = new Npc(builder);
-        npc.showTo(player);
-        
-
-        
-    }
-    
 }
