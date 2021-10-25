@@ -23,16 +23,16 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler
-    public void tickEvent(GameTickEvent e){
+    public void tickEvent(GameTickEvent e) {
         var game = instance.getGame();
         var cinematicProgressList = game.getCinematicProgressList();
 
-        Bukkit.getScheduler().runTask(instance, task->{
-            if(!cinematicProgressList.isEmpty()){
-                
+        Bukkit.getScheduler().runTask(instance, task -> {
+            if (!cinematicProgressList.isEmpty()) {
+
             }
         });
-    }   
+    }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
@@ -53,58 +53,55 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler
-    public void onCinematicStart(CinematicStartEvent e){
-        var game = instance.getGame();
-        var cinematic = e.getCinematicProgress();
-
-        if(game.getRestorePlayerInfo()){
-            var players = cinematic.getPlayers();
-            for (var player : players) {
-                var uuid = player.getUniqueId();
-                cinematic.getPlayerInfo().put(uuid, new PlayerInfo(player));
-            }
-            
-        }
-
-        if(game.getNpcs()){
-
-        }
-
-        if(game.getAutoHide()){
-            game.hide(true);
-        }
-
-    }
-
-    @EventHandler
-    public void onCinematicFinish(CinematicFinishEvent e){
+    public void onCinematicStart(CinematicStartEvent e) {
         var game = instance.getGame();
         var cinematic = e.getCinematicProgress();
         var players = cinematic.getPlayers();
 
-        if(game.getRestorePlayerInfo()){
-            var playerInfoList = cinematic.getPlayerInfo();
+        if (game.getRestorePlayerInfo()) {
             for (var player : players) {
                 var uuid = player.getUniqueId();
-                var playerInfo = playerInfoList.get(uuid);
-                
-                player.teleport(playerInfo.getLocation());
-                player.setGameMode(playerInfo.getGamemode());
+                cinematic.getPlayerInfo().put(uuid, new PlayerInfo(player));
             }
         }
 
-        if(game.getNpcs()){
+        if (game.getNpcs()) {
 
         }
 
-        if(game.getAutoHide()){
-            game.hide(false);
+        if (game.getAutoHide()) {
+            game.hide(true);
         }
 
         for (var player : players) {
             player.setGameMode(GameMode.SPECTATOR);
         }
+
     }
 
+    @EventHandler
+    public void onCinematicFinish(CinematicFinishEvent e) {
+        var game = instance.getGame();
+        var cinematic = e.getCinematicProgress();
+        var players = cinematic.getPlayers();
 
+        if (game.getRestorePlayerInfo()) {
+            var playerInfoList = cinematic.getPlayerInfo();
+            for (var player : players) {
+                var uuid = player.getUniqueId();
+                var playerInfo = playerInfoList.get(uuid);
+
+                player.teleport(playerInfo.getLocation());
+                player.setGameMode(playerInfo.getGamemode());
+            }
+        }
+
+        if (game.getNpcs()) {
+
+        }
+
+        if (game.getAutoHide()) {
+            game.hide(false);
+        }
+    }
 }

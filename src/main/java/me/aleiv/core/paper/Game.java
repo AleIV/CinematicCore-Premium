@@ -83,9 +83,7 @@ public class Game extends BukkitRunnable {
         task.add(new BukkitRunnable() {
             @Override
             public void run() {
-                Bukkit.getScheduler().runTask(instance, Btask->{
-                    Bukkit.getPluginManager().callEvent(new CinematicStartEvent(actualCinematic, true));
-                });
+                Bukkit.getPluginManager().callEvent(new CinematicStartEvent(actualCinematic, false));
             }
             
         });
@@ -135,7 +133,9 @@ public class Game extends BukkitRunnable {
 
         completable.thenAccept(bool -> {
             cinematicProgressList.remove(actualCinematic);
-            Bukkit.getPluginManager().callEvent(new CinematicFinishEvent(actualCinematic, true));
+            Bukkit.getScheduler().runTask(instance, Btask ->{
+                Bukkit.getPluginManager().callEvent(new CinematicFinishEvent(actualCinematic, false));
+            });
 
         });
 
