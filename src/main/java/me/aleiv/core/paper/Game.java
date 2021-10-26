@@ -153,6 +153,8 @@ public class Game extends BukkitRunnable {
         var cinematic = recording.get(uuid);
         recording.remove(uuid);
         cinematics.put(cinematic.getName(), cinematic);
+
+        instance.updateJson();
     }
 
     public void recordStatic(Player player, String cinematic, Integer ticks) {
@@ -167,6 +169,8 @@ public class Game extends BukkitRunnable {
         }
 
         cinematics.put(cinematic, new Cinematic(cinematic, frames));
+
+        instance.updateJson();
     }
 
     public void sendBlack() {

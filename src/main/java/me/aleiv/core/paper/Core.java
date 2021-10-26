@@ -81,6 +81,9 @@ public class Core extends JavaPlugin {
     @Override
     public void onDisable() {
 
+    }
+
+    public void updateJson(){
         var list = game.getCinematics();
 
         try {
@@ -94,7 +97,6 @@ public class Core extends JavaPlugin {
 
             e.printStackTrace();
         }
-
     }
 
     public void unregisterListener(Listener listener) {

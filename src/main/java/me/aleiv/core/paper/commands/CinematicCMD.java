@@ -253,6 +253,8 @@ public class CinematicCMD extends BaseCommand {
         } else {
             cinematics.remove(cinematic);
             sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic + " deleted.");
+
+            instance.updateJson();
         }
 
     }
@@ -281,6 +283,8 @@ public class CinematicCMD extends BaseCommand {
 
             sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic1 + " and " + cinematic2 + " merged.");
 
+            instance.updateJson();
+
         }
 
     }
@@ -306,6 +310,8 @@ public class CinematicCMD extends BaseCommand {
 
             sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic1 + " cloned in " + cinematic2);
 
+            instance.updateJson();
+
         }
 
     }
@@ -328,6 +334,8 @@ public class CinematicCMD extends BaseCommand {
             cinematics.put(name, cine);
 
             sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic + " renamed to " + name);
+
+            instance.updateJson();
 
         }
     }
