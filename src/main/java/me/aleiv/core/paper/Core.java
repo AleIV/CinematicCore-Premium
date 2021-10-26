@@ -24,6 +24,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.Title.Times;
+import us.jcedeno.libs.Npc;
 import us.jcedeno.libs.rapidinv.RapidInvManager;
 
 
@@ -44,6 +45,7 @@ public class Core extends JavaPlugin {
 
         RapidInvManager.register(this);
         BukkitTCT.registerPlugin(this);
+        Npc.registerPlugin(this);
         
 
         //LISTENERS
@@ -107,12 +109,12 @@ public class Core extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(listener, instance);
     }
 
-    public void adminMessage(String text) {
+    /*public void adminMessage(String text) {
         Bukkit.getOnlinePlayers().forEach(player -> {
             if (player.hasPermission("admin.perm"))
                 player.sendMessage(text);
         });
-    }
+    }*/
 
     public Component componentToString(String str) {
         return miniMessage.parse(str);

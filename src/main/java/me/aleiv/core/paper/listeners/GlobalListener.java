@@ -6,6 +6,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import me.aleiv.core.paper.Core;
@@ -56,25 +58,36 @@ public class GlobalListener implements Listener {
     public void onCinematicStart(CinematicStartEvent e) {
         var game = instance.getGame();
         var cinematic = e.getCinematicProgress();
-        var players = cinematic.getPlayers();
+        var uuids = cinematic.getUuids();
 
-        if (game.getRestorePlayerInfo()) {
-            for (var player : players) {
-                var uuid = player.getUniqueId();
-                cinematic.getPlayerInfo().put(uuid, new PlayerInfo(player));
+        if (game.getRestoreGamemode() || game.getRestoreLocation()) {
+            for (var uuid : uuids) {
+                var player = Bukkit.getPlayer(uuid);
+                if (player != null) {
+                    cinematic.getPlayerInfo().put(uuid, new PlayerInfo(player));
+                }
+                
             }
         }
 
         if (game.getNpcs()) {
-
+            Bukkit.getOnlinePlayers().forEach(player -> {
+                if (player.getGameMode() == GameMode.ADVENTURE || player.getGameMode() == GameMode.SURVIVAL) {
+                    game.spawnClone(player, cinematic);
+                }
+            });
         }
 
         if (game.getAutoHide()) {
             game.hide(true);
         }
 
-        for (var player : players) {
-            player.setGameMode(GameMode.SPECTATOR);
+        for (var uuid : uuids) {
+            var player = Bukkit.getPlayer(uuid);
+            if (player != null) {
+                player.setGameMode(GameMode.SPECTATOR);
+            }
+
         }
 
     }
@@ -83,21 +96,43 @@ public class GlobalListener implements Listener {
     public void onCinematicFinish(CinematicFinishEvent e) {
         var game = instance.getGame();
         var cinematic = e.getCinematicProgress();
-        var players = cinematic.getPlayers();
+        var uuids = cinematic.getUuids();
+        var playerInfoList = cinematic.getPlayerInfo();
 
-        if (game.getRestorePlayerInfo()) {
-            var playerInfoList = cinematic.getPlayerInfo();
-            for (var player : players) {
-                var uuid = player.getUniqueId();
-                var playerInfo = playerInfoList.get(uuid);
+        if (game.getRestoreGamemode()) {
+            for (var uuid : uuids) {
+                var player = Bukkit.getPlayer(uuid);
+                if (player != null) {
+                    var playerInfo = playerInfoList.get(uuid);
+                    player.setGameMode(playerInfo.getGamemode());
+                }
+            }
+        }
 
-                player.teleport(playerInfo.getLocation());
-                player.setGameMode(playerInfo.getGamemode());
+        if (game.getRestoreLocation()) {
+            for (var uuid : uuids) {
+                var player = Bukkit.getPlayer(uuid);
+                if (player != null) {
+                    var playerInfo = playerInfoList.get(uuid);
+                    player.teleport(playerInfo.getLocation());
+                }
+            }
+        }
+
+        if (game.getRestoreGamemode() || game.getRestoreLocation()) {
+            for (var uuid : uuids) {
+                var player = Bukkit.getPlayer(uuid);
+                if (player != null) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 20, false, false, false));
+                }
+                
             }
         }
 
         if (game.getNpcs()) {
-
+            cinematic.getSpawnedNpcs().forEach(npc -> {
+                npc.delete();
+            });
         }
 
         if (game.getAutoHide()) {

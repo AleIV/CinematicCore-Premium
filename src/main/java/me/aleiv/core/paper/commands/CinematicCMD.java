@@ -183,7 +183,8 @@ public class CinematicCMD extends BaseCommand {
                 players.add(sender);
             }
 
-            game.play(players, cinematic);
+            var uuids = players.stream().map(player -> player.getUniqueId()).toList();
+            game.play(uuids, cinematic);
         }
         
     }
@@ -192,7 +193,7 @@ public class CinematicCMD extends BaseCommand {
     public void globalmute(CommandSender sender) {
         var game = instance.getGame();
         game.setGlobalmute(!game.getGlobalmute());
-        instance.adminMessage(ChatColor.DARK_AQUA + "Cinematic globalmute " + game.getGlobalmute());
+        sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic globalmute " + game.getGlobalmute());
 
     }
 
@@ -200,7 +201,7 @@ public class CinematicCMD extends BaseCommand {
     public void npcs(CommandSender sender, Boolean bool) {
         var game = instance.getGame();
         game.setNpcs(bool);
-        instance.adminMessage(ChatColor.DARK_AQUA + "Cinematic npcs " + bool);
+        sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic npcs " + bool);
 
     }
 
@@ -208,7 +209,7 @@ public class CinematicCMD extends BaseCommand {
     public void fade(CommandSender sender, Boolean bool) {
         var game = instance.getGame();
         game.setFade(bool);
-        instance.adminMessage(ChatColor.DARK_AQUA + "Cinematic fade " + bool);
+        sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic fade " + bool);
 
     }
 
@@ -216,15 +217,23 @@ public class CinematicCMD extends BaseCommand {
     public void autoHide(CommandSender sender, Boolean bool) {
         var game = instance.getGame();
         game.setAutoHide(bool);
-        instance.adminMessage(ChatColor.DARK_AQUA + "Cinematic autoHide " + bool);
+        sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic autoHide " + bool);
 
     }
 
-    @Subcommand("restorePlayerInfo")
-    public void restorePlayerInfo(CommandSender sender, Boolean bool) {
+    @Subcommand("restoreGamemode")
+    public void restoreGamemode(CommandSender sender, Boolean bool) {
         var game = instance.getGame();
-        game.setRestorePlayerInfo(bool);
-        instance.adminMessage(ChatColor.DARK_AQUA + "Cinematic restorePlayerInfo " + bool);
+        game.setRestoreGamemode(bool);
+        sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic restoreGamemode " + bool);
+
+    }
+
+    @Subcommand("restoreLocation")
+    public void restoreLocation(CommandSender sender, Boolean bool) {
+        var game = instance.getGame();
+        game.setRestoreLocation(bool);
+        sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic restoreLocation " + bool);
 
     }
 
@@ -232,7 +241,7 @@ public class CinematicCMD extends BaseCommand {
     public void hide(CommandSender sender, Boolean bool) {
         var game = instance.getGame();
         game.hide(bool);
-        instance.adminMessage(ChatColor.DARK_AQUA + "Cinematic hide " + bool);
+        sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic hide " + bool);
 
     }
 

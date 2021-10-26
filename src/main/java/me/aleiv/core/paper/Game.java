@@ -21,6 +21,8 @@ import me.aleiv.core.paper.objects.Cinematic;
 import me.aleiv.core.paper.objects.CinematicProgress;
 import me.aleiv.core.paper.objects.Frame;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
+import us.jcedeno.libs.Npc;
+import us.jcedeno.libs.utils.NPCOptions;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -31,10 +33,11 @@ public class Game extends BukkitRunnable {
     long startTime = 0;
 
     Boolean globalmute = false;
-    Boolean npcs = false;
+    Boolean npcs = true;
     Boolean fade = true;
     Boolean autoHide = false;
-    Boolean restorePlayerInfo = true;
+    Boolean restoreLocation = true;
+    Boolean restoreGamemode = true;
 
     RecordingListener recordingListener;
 
@@ -60,7 +63,7 @@ public class Game extends BukkitRunnable {
         Bukkit.getPluginManager().callEvent(new GameTickEvent(new_time, true));
     }
 
-    public void play(List<Player> players, String... cinematic) {
+    public void play(List<UUID> uuids, String... cinematic) {
 
         var task = new BukkitTCT();
 
@@ -69,7 +72,7 @@ public class Game extends BukkitRunnable {
         if(fade) sendBlack();
 
         var scenes = Arrays.asList(cinematic).stream().map(name -> cinematics.get(name)).toList();
-        var actualCinematic = new CinematicProgress(scenes, players, gameTime, task);
+        var actualCinematic = new CinematicProgress(scenes, uuids, gameTime, task);
         cinematicProgressList.add(actualCinematic);
 
         task.addWithDelay(new BukkitRunnable() {
@@ -101,8 +104,11 @@ public class Game extends BukkitRunnable {
                 task.addWithDelay(new BukkitRunnable() {
                     @Override
                     public void run() {
-                        players.forEach(p -> {
-                            p.teleport(loc);
+                        uuids.forEach(uuid -> {
+                            var player = Bukkit.getPlayer(uuid);
+                            if(player != null){
+                                player.teleport(loc);
+                            }
                         });
                     }
 
@@ -139,6 +145,19 @@ public class Game extends BukkitRunnable {
 
         });
 
+    }
+
+    public void spawnClone(Player player, CinematicProgress cinematic){
+        var loc = player.getLocation();
+        var name = player.getName();
+        var options = NPCOptions.builder().location(loc).hideNametag(true).usingPlayerSkin(name).rotateHead(false).build();
+
+        var npc = Npc.create(options);
+
+        Bukkit.getOnlinePlayers().forEach(p ->{
+            npc.showTo(p);
+            cinematic.getSpawnedNpcs().add(npc);
+        });
     }
 
     public void startRecord(Player player, String cinematic) {
