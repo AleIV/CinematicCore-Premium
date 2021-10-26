@@ -49,6 +49,12 @@ public class CinematicCMD extends BaseCommand {
                 + ChatColor.AQUA + " Merge 2 scenes.");
         sender.sendMessage(ChatColor.WHITE + "/cinematic clone <scene to clone> <name of clone>" + ChatColor.AQUA
                 + " Clone scene.");
+        sender.sendMessage(ChatColor.WHITE + "/cinematic add-event <scene> <event>" + ChatColor.AQUA
+                + " Add an event to execute in a cinematic.");
+        sender.sendMessage(ChatColor.WHITE + "/cinematic remove-event <scene> <event>" + ChatColor.AQUA
+                + " Remove an event in a cinematic.");
+        sender.sendMessage(ChatColor.WHITE + "/cinematic event-list <scene>" + ChatColor.AQUA
+                + " List of events in a cinematic.");
         
     }
 
@@ -252,6 +258,7 @@ public class CinematicCMD extends BaseCommand {
         sender.sendMessage(ChatColor.DARK_AQUA + "Scene list: " + ChatColor.WHITE + cinematics.toString());
 
     }
+    
 
     @Subcommand("delete")
     public void delete(CommandSender sender, String cinematic) {
@@ -288,7 +295,9 @@ public class CinematicCMD extends BaseCommand {
 
             cinematics.remove(cinematic1);
             cinematics.remove(cinematic2);
-            cinematics.put(name, new Cinematic(name, frames));
+            var newCinematic = new Cinematic(name);
+            newCinematic.setFrames(frames);
+            cinematics.put(name, newCinematic);
 
             sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic1 + " and " + cinematic2 + " merged.");
 
@@ -313,9 +322,10 @@ public class CinematicCMD extends BaseCommand {
             var cine1 = cinematics.get(cinematic1);
 
             var list = cine1.getFrames().stream().toList();
-            var cine2 = new Cinematic(cinematic2, list);
+            var newCinematic = new Cinematic(cinematic2);
+            newCinematic.setFrames(list);
 
-            cinematics.put(cinematic2, cine2);
+            cinematics.put(cinematic2, newCinematic);
 
             sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic1 + " cloned in " + cinematic2);
 
@@ -347,6 +357,72 @@ public class CinematicCMD extends BaseCommand {
             instance.updateJson();
 
         }
+    }
+
+    @Subcommand("add-event")
+    public void event(Player sender, String cinematic, String event) {
+        var game = instance.getGame();
+        var cinematics = game.getCinematics();
+        if (!cinematics.containsKey(cinematic)) {
+            sender.sendMessage(ChatColor.RED + "Cinematic doesn't exist.");
+        } else {
+            var cine = cinematics.get(cinematic);
+            var cinematicProgress = game.getCinematicProgress(sender);
+
+            if(cinematicProgress != null){
+                cine.getTimedEvents().put(cinematicProgress.getCurrentTime(), event);
+
+                sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic event added to " + cinematic + ". Event: " + event);
+
+                instance.updateJson();
+            }else{
+                sender.sendMessage(ChatColor.RED + "You are not in a cinematic.");
+
+            }
+        
+        }
+
+    }
+
+    @Subcommand("delete-event")
+    public void deleteEvent(Player sender, String cinematic, long event){
+        var game = instance.getGame();
+        var cinematics = game.getCinematics();
+        if (!cinematics.containsKey(cinematic)) {
+            sender.sendMessage(ChatColor.RED + "Cinematic doesn't exist.");
+        } else {
+            var cine = cinematics.get(cinematic);
+            var timedEvents = cine.getTimedEvents();
+
+            if(timedEvents.containsKey(event)){
+                timedEvents.remove(event);
+
+                sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic event removed from " + cinematic + ". Event: " + event);
+
+                instance.updateJson();
+            }else{
+                sender.sendMessage(ChatColor.RED + "Cinematic event doesn't exist.");
+
+            }
+        
+        }
+
+    }
+
+    @Subcommand("event-list")
+    public void eventList(Player sender, String cinematic){
+        var game = instance.getGame();
+        var cinematics = game.getCinematics();
+        if (!cinematics.containsKey(cinematic)) {
+            sender.sendMessage(ChatColor.RED + "Cinematic doesn't exist.");
+        } else {
+            var cine = cinematics.get(cinematic);
+            var timedEvents = cine.getTimedEvents();
+
+            sender.sendMessage(ChatColor.DARK_AQUA + cinematic + " events list: " + ChatColor.WHITE + timedEvents.toString());
+        
+        }
+
     }
 
 }

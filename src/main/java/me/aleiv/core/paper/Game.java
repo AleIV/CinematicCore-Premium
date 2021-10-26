@@ -72,7 +72,7 @@ public class Game extends BukkitRunnable {
         if(fade) sendBlack();
 
         var scenes = Arrays.asList(cinematic).stream().map(name -> cinematics.get(name)).toList();
-        var actualCinematic = new CinematicProgress(scenes, uuids, gameTime, task);
+        var actualCinematic = new CinematicProgress(scenes, uuids, gameTime, task, instance);
         cinematicProgressList.add(actualCinematic);
 
         task.addWithDelay(new BukkitRunnable() {
@@ -187,9 +187,16 @@ public class Game extends BukkitRunnable {
             frames.add(frame);
         }
 
-        cinematics.put(cinematic, new Cinematic(cinematic, frames));
+        var newCinematic = new Cinematic(cinematic);
+        newCinematic.setFrames(frames);
+
+        cinematics.put(cinematic, newCinematic);
 
         instance.updateJson();
+    }
+
+    public CinematicProgress getCinematicProgress(Player player){
+        return cinematicProgressList.stream().filter(cine -> cine.isViewer(player.getUniqueId())).findAny().orElse(null);
     }
 
     public void sendBlack() {

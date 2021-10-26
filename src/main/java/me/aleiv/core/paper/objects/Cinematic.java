@@ -1,6 +1,7 @@
 package me.aleiv.core.paper.objects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import lombok.Data;
@@ -11,16 +12,18 @@ public class Cinematic {
     List<Frame> frames;
     String name;
 
+    HashMap<Long, String> timedEvents;
+
     public Cinematic(String name){
         this.name = name;
         this.frames = new ArrayList<>();
-
+        this.timedEvents = new HashMap<>();
     }
 
-    public Cinematic(String name, List<Frame> frames){
+    public Cinematic(String name, List<Frame> frames, HashMap<Long, String> timedEvents){
         this.name = name;
         this.frames = frames;
-
+        this.timedEvents = timedEvents;
     }
 
     /**

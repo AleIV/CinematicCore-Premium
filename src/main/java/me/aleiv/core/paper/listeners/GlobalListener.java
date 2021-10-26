@@ -31,7 +31,9 @@ public class GlobalListener implements Listener {
 
         Bukkit.getScheduler().runTask(instance, task -> {
             if (!cinematicProgressList.isEmpty()) {
-
+                for (var cinematicProgress : cinematicProgressList) {
+                    cinematicProgress.checkEvent();
+                }
             }
         });
     }
@@ -133,6 +135,7 @@ public class GlobalListener implements Listener {
             cinematic.getSpawnedNpcs().forEach(npc -> {
                 npc.delete();
             });
+            cinematic.getSpawnedNpcs().clear();
         }
 
         if (game.getAutoHide()) {
