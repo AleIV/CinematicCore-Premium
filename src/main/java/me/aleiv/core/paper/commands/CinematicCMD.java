@@ -166,7 +166,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("play")
-    public void play(Player sender, Boolean bool, String... cinematic) {
+    public void play(CommandSender sender, Boolean bool, String... cinematic) {
 
         var game = instance.getGame();
         var cinematics = game.getCinematics();
@@ -186,7 +186,13 @@ public class CinematicCMD extends BaseCommand {
             if(bool){
                 players = Bukkit.getOnlinePlayers().stream().map(player -> (Player) player).toList();
             }else{
-                players.add(sender);
+                if(sender instanceof Player playerSender){
+                    players.add(playerSender);
+                    
+                }else{
+                    sender.sendMessage(ChatColor.RED + "Sender is not a player.");
+                    return;
+                }
             }
 
             var uuids = players.stream().map(player -> player.getUniqueId()).toList();
@@ -395,7 +401,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("delete-event")
-    public void deleteEvent(Player sender, String cinematic, Integer event){
+    public void deleteEvent(CommandSender sender, String cinematic, Integer event){
         var game = instance.getGame();
         var cinematics = game.getCinematics();
         if (!cinematics.containsKey(cinematic)) {
@@ -420,7 +426,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("event-list")
-    public void eventList(Player sender, String cinematic){
+    public void eventList(CommandSender sender, String cinematic){
         var game = instance.getGame();
         var cinematics = game.getCinematics();
         if (!cinematics.containsKey(cinematic)) {
