@@ -13,7 +13,8 @@ import io.papermc.paper.event.player.AsyncChatEvent;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.events.CinematicFinishEvent;
 import me.aleiv.core.paper.events.CinematicStartEvent;
-import me.aleiv.core.paper.events.GameTickEvent;
+import me.aleiv.core.paper.events.CinematicTickEvent;
+import me.aleiv.core.paper.events.TaskChainTickEvent;
 import me.aleiv.core.paper.objects.PlayerInfo;
 
 public class GlobalListener implements Listener {
@@ -25,17 +26,26 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler
-    public void tickEvent(GameTickEvent e) {
+    public void onCinemaTick(CinematicTickEvent e){
+        var cinematicProgress = e.getCinematicProgress();
+        cinematicProgress.checkEvent();
+    }
+
+    @EventHandler
+    public void onTick(TaskChainTickEvent e){
         var game = instance.getGame();
         var cinematicProgressList = game.getCinematicProgressList();
 
-        Bukkit.getScheduler().runTask(instance, task -> {
-            if (!cinematicProgressList.isEmpty()) {
-                for (var cinematicProgress : cinematicProgressList) {
-                    cinematicProgress.checkEvent();
+        if (!cinematicProgressList.isEmpty()) {
+            var iter = cinematicProgressList.iterator();
+            while (iter.hasNext()) {
+                var cinematic = iter.next();
+                if(cinematic.getTask() == e.getBukkitTCT()){
+                    Bukkit.getPluginManager().callEvent(new CinematicTickEvent(cinematic, !Bukkit.isPrimaryThread()));
                 }
             }
-        });
+        }
+
     }
 
     @EventHandler

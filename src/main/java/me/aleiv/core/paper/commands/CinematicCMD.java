@@ -370,11 +370,21 @@ public class CinematicCMD extends BaseCommand {
             var cinematicProgress = game.getCinematicProgress(sender);
 
             if(cinematicProgress != null){
-                cine.getTimedEvents().put(cinematicProgress.getCurrentTime(), event);
+                var timedEvents = cine.getTimedEvents();
+                var currentTick = cinematicProgress.getTask().getCurrentTask();
 
-                sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic event added to " + cinematic + ". Event: " + event);
+                if(timedEvents.containsKey(currentTick)){
+                    var listOfEvents = timedEvents.get(currentTick);
+                    listOfEvents.add(event);
 
+                }else{
+                    List<String> list = new ArrayList<>();
+                    list.add(event);
+                    cine.getTimedEvents().put(currentTick, list);
+                }
+                
                 instance.updateJson();
+                sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic event added to " + cinematic + ". Event: " + event);
             }else{
                 sender.sendMessage(ChatColor.RED + "You are not in a cinematic.");
 
@@ -385,7 +395,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("delete-event")
-    public void deleteEvent(Player sender, String cinematic, long event){
+    public void deleteEvent(Player sender, String cinematic, Integer event){
         var game = instance.getGame();
         var cinematics = game.getCinematics();
         if (!cinematics.containsKey(cinematic)) {

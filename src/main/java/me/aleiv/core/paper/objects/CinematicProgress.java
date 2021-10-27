@@ -18,32 +18,28 @@ public class CinematicProgress {
 
     List<Cinematic> scenes;
     List<UUID> uuids;
-    long startTime = 0;
     BukkitTCT task;
 
     HashMap<UUID, PlayerInfo> playerInfo = new HashMap<>();
     List<Npc> spawnedNpcs = new ArrayList<>();
 
-    public CinematicProgress(List<Cinematic> scenes, List<UUID> uuids, long startTime, BukkitTCT task, Core instance){
+    public CinematicProgress(List<Cinematic> scenes, List<UUID> uuids, BukkitTCT task, Core instance){
         this.scenes = scenes;
         this.uuids = uuids;
-        this.startTime = startTime;
         this.task = task;
         this.instance = instance;
     }
 
-    public Long getCurrentTime(){
-        var game = instance.getGame();
-        var gameTime = game.getGameTime();
-        return gameTime-startTime;
-    }
-
     public void checkEvent(){
-        var currentTime = getCurrentTime();
+        var currentTick = task.getCurrentTask();
         var timedEvents = scenes.get(0).getTimedEvents();
-        if(timedEvents.containsKey(currentTime)){
-            var event = timedEvents.get(currentTime);
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), event);
+        if(timedEvents.containsKey(currentTick)){
+            var event = timedEvents.get(currentTick);
+            for (var string : event) {
+                Bukkit.getScheduler().runTask(instance, task ->
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), string)
+                );
+            }
         }
     }
 

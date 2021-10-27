@@ -42,7 +42,6 @@ public class Core extends JavaPlugin {
         instance = this;
 
         game = new Game(this);
-        game.runTaskTimerAsynchronously(this, 0L, 20L);
 
         RapidInvManager.register(this);
         BukkitTCT.registerPlugin(this);

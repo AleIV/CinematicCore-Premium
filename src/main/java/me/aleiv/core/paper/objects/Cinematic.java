@@ -12,7 +12,7 @@ public class Cinematic {
     List<Frame> frames;
     String name;
 
-    HashMap<Long, String> timedEvents;
+    HashMap<Integer, List<String>> timedEvents;
 
     public Cinematic(String name){
         this.name = name;
@@ -20,7 +20,7 @@ public class Cinematic {
         this.timedEvents = new HashMap<>();
     }
 
-    public Cinematic(String name, List<Frame> frames, HashMap<Long, String> timedEvents){
+    public Cinematic(String name, List<Frame> frames, HashMap<Integer, List<String>> timedEvents){
         this.name = name;
         this.frames = frames;
         this.timedEvents = timedEvents;

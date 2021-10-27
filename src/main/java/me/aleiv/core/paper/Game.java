@@ -15,7 +15,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import me.aleiv.core.paper.events.CinematicFinishEvent;
 import me.aleiv.core.paper.events.CinematicStartEvent;
-import me.aleiv.core.paper.events.GameTickEvent;
 import me.aleiv.core.paper.listeners.RecordingListener;
 import me.aleiv.core.paper.objects.Cinematic;
 import me.aleiv.core.paper.objects.CinematicProgress;
@@ -26,11 +25,8 @@ import us.jcedeno.libs.utils.NPCOptions;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Game extends BukkitRunnable {
+public class Game{
     Core instance;
-
-    long gameTime = 0;
-    long startTime = 0;
 
     Boolean globalmute = false;
     Boolean npcs = true;
@@ -48,19 +44,8 @@ public class Game extends BukkitRunnable {
 
     public Game(Core instance){
         this.instance = instance;
-        this.startTime = System.currentTimeMillis();
 
         recordingListener = new RecordingListener(instance);
-    }
-
-    @Override
-    public void run() {
-
-        var new_time = (int) (Math.floor((System.currentTimeMillis() - startTime) / 1000.0));
-
-        gameTime = new_time;
-
-        Bukkit.getPluginManager().callEvent(new GameTickEvent(new_time, true));
     }
 
     public void play(List<UUID> uuids, String... cinematic) {
@@ -72,7 +57,7 @@ public class Game extends BukkitRunnable {
         if(fade) sendBlack();
 
         var scenes = Arrays.asList(cinematic).stream().map(name -> cinematics.get(name)).toList();
-        var actualCinematic = new CinematicProgress(scenes, uuids, gameTime, task, instance);
+        var actualCinematic = new CinematicProgress(scenes, uuids, task, instance);
         cinematicProgressList.add(actualCinematic);
 
         task.addWithDelay(new BukkitRunnable() {
@@ -149,10 +134,9 @@ public class Game extends BukkitRunnable {
 
     public void spawnClone(Player player, CinematicProgress cinematic){
         var loc = player.getLocation();
-        var name = player.getName();
-        var options = NPCOptions.builder().location(loc).hideNametag(true).usingPlayerSkin(name).rotateHead(false).build();
+        var options = NPCOptions.builder().location(loc).hideNametag(true).rotateHead(false).build();
 
-        var npc = Npc.create(options);
+        var npc = new Npc(player, options);
 
         Bukkit.getOnlinePlayers().forEach(p ->{
             npc.showTo(p);

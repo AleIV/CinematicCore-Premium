@@ -8,11 +8,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * think much about it
  */
 public class TaskChainTool {
+
     /**
      * Use concurrent linked queue to preserve order and ensure many threads can
      * access the same resources at once.
      */
-    private ConcurrentLinkedQueue<Runnable> queue = new ConcurrentLinkedQueue<>();
+    protected ConcurrentLinkedQueue<Runnable> queue = new ConcurrentLinkedQueue<>();
+    protected int totalTasks;
 
     public boolean isEmpty() {
         return queue.isEmpty();
@@ -20,6 +22,14 @@ public class TaskChainTool {
 
     public Runnable poll() {
         return queue.poll();
+    }
+
+    public int getTasksLeft(){
+        return totalTasks-queue.size();
+    }
+
+    public int getCurrentTask(){
+        return totalTasks-getTasksLeft();
     }
 
     /**
@@ -30,7 +40,7 @@ public class TaskChainTool {
      */
     public TaskChainTool add(Runnable runnable) {
         queue.add(runnable);
-
+        
         return this;
     }
 
@@ -75,6 +85,7 @@ public class TaskChainTool {
      * @return CompletableFuture that completes when all tasks are completed.
      */
     public CompletableFuture<Boolean> execute() {
+        this.totalTasks = queue.size();
         return CompletableFuture.supplyAsync(() -> {
             /** Loop to execute all tasks in order. */
             while (!queue.isEmpty())
