@@ -20,6 +20,7 @@ import me.aleiv.core.paper.objects.Cinematic;
 import me.aleiv.core.paper.objects.CinematicProgress;
 import me.aleiv.core.paper.objects.Frame;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
+import net.md_5.bungee.api.ChatColor;
 import us.jcedeno.libs.Npc;
 import us.jcedeno.libs.utils.NPCOptions;
 
@@ -46,6 +47,34 @@ public class Game{
         this.instance = instance;
 
         recordingListener = new RecordingListener(instance);
+    }
+
+    public void record(Player player, List<Frame> frames, int seconds) {
+        var task = new BukkitTCT();
+
+        var count = 0;
+        for (int i = 0; i < seconds; i++) {
+            for (int j = 0; j < 20; j++) {
+
+                var c = (int) count / 20;
+                task.addWithDelay(new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        instance.sendActionBar(player, ChatColor.YELLOW + "" + c + "/" + seconds);
+                        var loc = player.getLocation().clone();
+                        var frame = new Frame(loc.getWorld().getName().toString(), loc.getX(), loc.getY(), loc.getZ(),
+                                loc.getYaw(), loc.getPitch());
+                        frames.add(frame);
+                    }
+
+                }, 50);
+
+                count++;
+            }
+
+        }
+
+        task.execute();
     }
 
     public void play(List<UUID> uuids, String... cinematic) {

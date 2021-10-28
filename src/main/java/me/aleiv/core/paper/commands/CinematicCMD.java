@@ -1,6 +1,7 @@
 package me.aleiv.core.paper.commands;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -119,6 +120,29 @@ public class CinematicCMD extends BaseCommand {
         }
     }
 
+    @Subcommand("rec|record")
+    public void rec(Player sender, String cinematic, Integer seconds) {
+
+        var game = instance.getGame();
+        var cinematics = game.getCinematics();
+        var recording = game.getRecording();
+
+        if (!recording.isEmpty()) {
+            sender.sendMessage(ChatColor.RED + "Someone is already recording.");
+
+        } else if (cinematics.containsKey(cinematic)) {
+            sender.sendMessage(ChatColor.RED + "Cinematic already exist.");
+
+        } else {
+            List<Frame> frames = new ArrayList<>();
+            var newCinematic = new Cinematic(cinematic, frames, new HashMap<>());
+            game.record(sender, frames, seconds);
+            game.getCinematics().put(cinematic, newCinematic);
+
+            instance.updateJson();
+        }
+    }
+
     @Subcommand("rec-static|record-static")
     public void recStatic(Player sender, String cinematic, Integer ticks) {
 
@@ -199,6 +223,13 @@ public class CinematicCMD extends BaseCommand {
             game.play(uuids, cinematic);
         }
         
+    }
+    
+    @Subcommand("save")
+    public void save(CommandSender sender) {
+        instance.updateJson();
+        sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic files updated.");
+
     }
 
     @Subcommand("globalmute")
@@ -303,6 +334,7 @@ public class CinematicCMD extends BaseCommand {
             cinematics.remove(cinematic2);
             var newCinematic = new Cinematic(name);
             newCinematic.setFrames(frames);
+            newCinematic.setTimedEvents(cine1.getTimedEvents());
             cinematics.put(name, newCinematic);
 
             sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic1 + " and " + cinematic2 + " merged.");
