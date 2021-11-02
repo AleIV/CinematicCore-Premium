@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import io.github.znetworkw.znpcservers.NPCLibrary;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.events.CinematicFinishEvent;
@@ -143,7 +144,10 @@ public class GlobalListener implements Listener {
 
         if (game.getNpcs()) {
             cinematic.getSpawnedNpcs().forEach(npc -> {
-                npc.delete();
+                instance.broadcastMessage(npc.getEntityID() + "");
+                NPCLibrary.deleteNPC(npc.getEntityID());
+                
+                
             });
             cinematic.getSpawnedNpcs().clear();
         }

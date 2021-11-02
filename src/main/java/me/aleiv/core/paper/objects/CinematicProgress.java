@@ -7,10 +7,10 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 
+import io.github.znetworkw.znpcservers.npc.NPC;
 import lombok.Data;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
-import us.jcedeno.libs.Npc;
 
 @Data
 public class CinematicProgress {
@@ -21,7 +21,7 @@ public class CinematicProgress {
     BukkitTCT task;
 
     HashMap<UUID, PlayerInfo> playerInfo = new HashMap<>();
-    List<Npc> spawnedNpcs = new ArrayList<>();
+    List<NPC> spawnedNpcs = new ArrayList<>();
 
     public CinematicProgress(List<Cinematic> scenes, List<UUID> uuids, BukkitTCT task, Core instance){
         this.scenes = scenes;

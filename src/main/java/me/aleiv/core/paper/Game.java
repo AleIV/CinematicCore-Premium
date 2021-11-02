@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import io.github.znetworkw.znpcservers.NPCLibrary;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import me.aleiv.core.paper.events.CinematicFinishEvent;
@@ -21,8 +22,6 @@ import me.aleiv.core.paper.objects.CinematicProgress;
 import me.aleiv.core.paper.objects.Frame;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
-import us.jcedeno.libs.Npc;
-import us.jcedeno.libs.utils.NPCOptions;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -163,14 +162,11 @@ public class Game{
 
     public void spawnClone(Player player, CinematicProgress cinematic){
         var loc = player.getLocation();
-        var options = NPCOptions.builder().location(loc).hideNametag(true).rotateHead(false).build();
+        var npc = NPCLibrary.createPlayerNPC(loc, player.getName(), false, player.getInventory(), player);
+        npc.getViewers().forEach(npc::spawn);
+        
 
-        var npc = new Npc(player, options);
-
-        Bukkit.getOnlinePlayers().forEach(p ->{
-            npc.showTo(p);
-            cinematic.getSpawnedNpcs().add(npc);
-        });
+        cinematic.getSpawnedNpcs().add(npc);
     }
 
     public void startRecord(Player player, String cinematic) {

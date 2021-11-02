@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import co.aikar.commands.PaperCommandManager;
+import io.github.znetworkw.znpcservers.NPCLibrary;
 import kr.entree.spigradle.annotations.SpigotPlugin;
 import lombok.Getter;
 import me.aleiv.core.paper.commands.CinematicCMD;
@@ -24,7 +25,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.Title.Times;
-import us.jcedeno.libs.Npc;
 import us.jcedeno.libs.rapidinv.RapidInvManager;
 
 
@@ -36,6 +36,7 @@ public class Core extends JavaPlugin {
     private @Getter PaperCommandManager commandManager;
     private @Getter static MiniMessage miniMessage = MiniMessage.get();
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private @Getter NPCLibrary npcLibrary;
 
     @Override
     public void onEnable() {
@@ -45,7 +46,8 @@ public class Core extends JavaPlugin {
 
         RapidInvManager.register(this);
         BukkitTCT.registerPlugin(this);
-        Npc.registerPlugin(this);
+        this.npcLibrary = new NPCLibrary();
+        this.npcLibrary.register(this);
         
 
         //LISTENERS
@@ -82,7 +84,7 @@ public class Core extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
+        this.npcLibrary.unregister();
     }
 
     public void updateJson(){
