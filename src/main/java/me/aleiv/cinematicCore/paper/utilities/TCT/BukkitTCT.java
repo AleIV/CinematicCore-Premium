@@ -1,4 +1,4 @@
-package me.aleiv.core.paper.utilities.TCT;
+package me.aleiv.cinematicCore.paper.utilities.TCT;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.aleiv.core.paper.events.TaskChainTickEvent;
+import me.aleiv.cinematicCore.paper.events.TaskChainTickEvent;
 
 /**
  * BukkitTCT - Quick and dirty way to run tasks asynchronously and synchronously

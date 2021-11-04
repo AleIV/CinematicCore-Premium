@@ -1,4 +1,4 @@
-package me.aleiv.core.paper;
+package me.aleiv.cinematicCore.paper;
 
 import java.time.Duration;
 
@@ -16,11 +16,11 @@ import co.aikar.commands.PaperCommandManager;
 import io.github.znetworkw.znpcservers.NPCLibrary;
 import kr.entree.spigradle.annotations.SpigotPlugin;
 import lombok.Getter;
-import me.aleiv.core.paper.commands.CinematicCMD;
-import me.aleiv.core.paper.listeners.GlobalListener;
-import me.aleiv.core.paper.objects.Cinematic;
-import me.aleiv.core.paper.utilities.JsonConfig;
-import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
+import me.aleiv.cinematicCore.paper.commands.CinematicCMD;
+import me.aleiv.cinematicCore.paper.listeners.GlobalListener;
+import me.aleiv.cinematicCore.paper.objects.Cinematic;
+import me.aleiv.cinematicCore.paper.utilities.JsonConfig;
+import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;

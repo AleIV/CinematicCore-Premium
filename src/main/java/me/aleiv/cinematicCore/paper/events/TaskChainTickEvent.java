@@ -1,10 +1,10 @@
-package me.aleiv.core.paper.events;
+package me.aleiv.cinematicCore.paper.events;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import lombok.Getter;
-import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
+import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
 
 public class TaskChainTickEvent extends Event {
     

@@ -1,4 +1,4 @@
-package me.aleiv.core.paper;
+package me.aleiv.cinematicCore.paper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,13 +14,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import io.github.znetworkw.znpcservers.NPCLibrary;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import me.aleiv.core.paper.events.CinematicFinishEvent;
-import me.aleiv.core.paper.events.CinematicStartEvent;
-import me.aleiv.core.paper.listeners.RecordingListener;
-import me.aleiv.core.paper.objects.Cinematic;
-import me.aleiv.core.paper.objects.CinematicProgress;
-import me.aleiv.core.paper.objects.Frame;
-import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
+import me.aleiv.cinematicCore.paper.events.CinematicFinishEvent;
+import me.aleiv.cinematicCore.paper.events.CinematicStartEvent;
+import me.aleiv.cinematicCore.paper.listeners.RecordingListener;
+import me.aleiv.cinematicCore.paper.objects.Cinematic;
+import me.aleiv.cinematicCore.paper.objects.CinematicProgress;
+import me.aleiv.cinematicCore.paper.objects.Frame;
+import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
 
 @Data

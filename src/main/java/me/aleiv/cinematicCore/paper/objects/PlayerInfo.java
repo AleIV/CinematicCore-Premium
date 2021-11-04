@@ -1,4 +1,4 @@
-package me.aleiv.core.paper.objects;
+package me.aleiv.cinematicCore.paper.objects;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package me.aleiv.core.paper.commands;
+package me.aleiv.cinematicCore.paper.commands;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,10 +16,10 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
-import me.aleiv.core.paper.CinematicTool;
-import me.aleiv.core.paper.objects.Cinematic;
-import me.aleiv.core.paper.objects.Frame;
-import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
+import me.aleiv.cinematicCore.paper.CinematicTool;
+import me.aleiv.cinematicCore.paper.objects.Cinematic;
+import me.aleiv.cinematicCore.paper.objects.Frame;
+import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
 
 @CommandAlias("cinematic|c")

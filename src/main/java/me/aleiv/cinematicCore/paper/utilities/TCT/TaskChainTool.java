@@ -1,4 +1,4 @@
-package me.aleiv.core.paper.utilities.TCT;
+package me.aleiv.cinematicCore.paper.utilities.TCT;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;

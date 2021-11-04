@@ -1,4 +1,4 @@
-package me.aleiv.core.paper.objects;
+package me.aleiv.cinematicCore.paper.objects;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,8 +9,8 @@ import org.bukkit.Bukkit;
 
 import io.github.znetworkw.znpcservers.npc.NPC;
 import lombok.Data;
-import me.aleiv.core.paper.CinematicTool;
-import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
+import me.aleiv.cinematicCore.paper.CinematicTool;
+import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
 
 @Data
 public class CinematicProgress {

@@ -1,4 +1,4 @@
-package me.aleiv.core.paper.utilities.TCT;
+package me.aleiv.cinematicCore.paper.utilities.TCT;
 
 /**
  * Utility Runnable that eases the creation of delayed tasks.
