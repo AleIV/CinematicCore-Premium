@@ -2,11 +2,8 @@ package me.aleiv.cinematicCore.paper.utilities.TCT;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import me.aleiv.cinematicCore.paper.events.TaskChainTickEvent;
 
 /**
  * BukkitTCT - Quick and dirty way to run tasks asynchronously and synchronously
@@ -43,18 +40,21 @@ public class BukkitTCT extends TaskChainTool {
     @Override
     public CompletableFuture<Boolean> execute() {
         this.totalTasks = queue.size();
-        return CompletableFuture.supplyAsync(() -> {
-            /** Loop to execute all tasks in order. */
+        var future = new CompletableFuture<Boolean>();
+
+        EXECUTOR_SERVICE.submit(() -> {
             while (!isEmpty()) {
-                var nextRunnable = poll();
+                var nextRunnable = this.poll();
                 if (nextRunnable instanceof BukkitRunnable bukkitRunnable)
                     handleBukkit(bukkitRunnable);
                 else
                     handleRunnable(nextRunnable); // use the method already defined in TaskChainTool.
-                Bukkit.getPluginManager().callEvent(new TaskChainTickEvent(this, true));
+
             }
-            return true;
+            future.complete(true);
+
         });
+        return future;
     }
 
     /**
@@ -70,7 +70,7 @@ public class BukkitTCT extends TaskChainTool {
         while (!bukkitTask.isCancelled() && plugin.getServer().getScheduler().isCurrentlyRunning(id)) {
             // Hold on bukkit finishing the task.
             try {
-                Thread.sleep(50);
+                Thread.sleep(40);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
