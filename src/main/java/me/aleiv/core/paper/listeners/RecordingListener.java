@@ -4,14 +4,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.CinematicTool;
 import me.aleiv.core.paper.objects.Frame;
 
 public class RecordingListener implements Listener {
 
-    Core instance;
+    CinematicTool instance;
 
-    public RecordingListener(Core instance) {
+    public RecordingListener(CinematicTool instance) {
         this.instance = instance;
     }
 

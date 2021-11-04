@@ -26,7 +26,7 @@ import net.md_5.bungee.api.ChatColor;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Game{
-    Core instance;
+    CinematicTool instance;
 
     Boolean globalmute = false;
     Boolean npcs = true;
@@ -42,7 +42,7 @@ public class Game{
     List<CinematicProgress> cinematicProgressList = new ArrayList<>();
 
 
-    public Game(Core instance){
+    public Game(CinematicTool instance){
         this.instance = instance;
 
         recordingListener = new RecordingListener(instance);

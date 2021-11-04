@@ -9,12 +9,12 @@ import org.bukkit.Bukkit;
 
 import io.github.znetworkw.znpcservers.npc.NPC;
 import lombok.Data;
-import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.CinematicTool;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 
 @Data
 public class CinematicProgress {
-    Core instance;
+    CinematicTool instance;
 
     List<Cinematic> scenes;
     List<UUID> uuids;
@@ -23,7 +23,7 @@ public class CinematicProgress {
     HashMap<UUID, PlayerInfo> playerInfo = new HashMap<>();
     List<NPC> spawnedNpcs = new ArrayList<>();
 
-    public CinematicProgress(List<Cinematic> scenes, List<UUID> uuids, BukkitTCT task, Core instance){
+    public CinematicProgress(List<Cinematic> scenes, List<UUID> uuids, BukkitTCT task, CinematicTool instance){
         this.scenes = scenes;
         this.uuids = uuids;
         this.task = task;

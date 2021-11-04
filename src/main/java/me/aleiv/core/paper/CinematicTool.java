@@ -29,9 +29,9 @@ import us.jcedeno.libs.rapidinv.RapidInvManager;
 
 
 @SpigotPlugin
-public class Core extends JavaPlugin {
+public class CinematicTool extends JavaPlugin {
 
-    private static @Getter Core instance;
+    private static @Getter CinematicTool instance;
     private @Getter Game game;
     private @Getter PaperCommandManager commandManager;
     private @Getter static MiniMessage miniMessage = MiniMessage.get();

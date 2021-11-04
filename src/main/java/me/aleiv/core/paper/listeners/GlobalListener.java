@@ -11,7 +11,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import io.github.znetworkw.znpcservers.NPCLibrary;
 import io.papermc.paper.event.player.AsyncChatEvent;
-import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.CinematicTool;
 import me.aleiv.core.paper.events.CinematicFinishEvent;
 import me.aleiv.core.paper.events.CinematicStartEvent;
 import me.aleiv.core.paper.events.CinematicTickEvent;
@@ -20,9 +20,9 @@ import me.aleiv.core.paper.objects.PlayerInfo;
 
 public class GlobalListener implements Listener {
 
-    Core instance;
+    CinematicTool instance;
 
-    public GlobalListener(Core instance) {
+    public GlobalListener(CinematicTool instance) {
         this.instance = instance;
     }
 

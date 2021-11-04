@@ -16,7 +16,7 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
-import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.CinematicTool;
 import me.aleiv.core.paper.objects.Cinematic;
 import me.aleiv.core.paper.objects.Frame;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
@@ -26,9 +26,9 @@ import net.md_5.bungee.api.ChatColor;
 @CommandPermission("cinematic.cmd")
 public class CinematicCMD extends BaseCommand {
 
-    private @NonNull Core instance;
+    private @NonNull CinematicTool instance;
 
-    public CinematicCMD(Core instance) {
+    public CinematicCMD(CinematicTool instance) {
         this.instance = instance;
 
     }
