@@ -36,9 +36,9 @@ public class CinematicProgress {
         if(timedEvents.containsKey(currentTick)){
             var event = timedEvents.get(currentTick);
             for (var string : event) {
-                Bukkit.getScheduler().runTask(instance, task ->
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), string)
-                );
+                Bukkit.getScheduler().runTask(instance, task ->{ 
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), string);
+                });
             }
         }
     }

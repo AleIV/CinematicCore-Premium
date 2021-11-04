@@ -38,7 +38,7 @@ public class TaskChainTool {
     }
 
     public int getCurrentTask(){
-        return totalTasks-getTasksLeft();
+        return Math.abs(queue.size()-totalTasks);
     }
 
     /**
