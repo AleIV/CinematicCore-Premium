@@ -28,7 +28,7 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onCinemaTick(CinematicTickEvent e) {
-        Bukkit.getScheduler().runTask(instance, task ->{
+        Bukkit.getScheduler().runTask(instance, task -> {
             var cinematicProgress = e.getCinematicProgress();
             cinematicProgress.checkEvent();
         });
@@ -71,96 +71,92 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onCinematicStart(CinematicStartEvent e) {
-        Bukkit.getScheduler().runTask(instance, task -> {
-            var game = instance.getGame();
-            var cinematic = e.getCinematicProgress();
-            var uuids = cinematic.getUuids();
+        var game = instance.getGame();
+        var cinematic = e.getCinematicProgress();
+        var uuids = cinematic.getUuids();
 
-            if (game.getRestoreGamemode() || game.getRestoreLocation()) {
-                for (var uuid : uuids) {
-                    var player = Bukkit.getPlayer(uuid);
-                    if (player != null) {
-                        cinematic.getPlayerInfo().put(uuid, new PlayerInfo(player));
-                    }
-
-                }
-            }
-
-            if (game.getNpcs()) {
-                cinematic.getUuids().forEach(uuid ->{
-                    var player = Bukkit.getPlayer(uuid);
-                    if (player != null && player.getGameMode() == GameMode.ADVENTURE || player.getGameMode() == GameMode.SURVIVAL) {
-                        game.spawnClone(player, cinematic);
-                    }
-                });
-            }
-
-            if (game.getAutoHide()) {
-                game.hide(true);
-            }
-
+        if (game.getRestoreGamemode() || game.getRestoreLocation()) {
             for (var uuid : uuids) {
                 var player = Bukkit.getPlayer(uuid);
                 if (player != null) {
-                    player.setGameMode(GameMode.SPECTATOR);
+                    cinematic.getPlayerInfo().put(uuid, new PlayerInfo(player));
                 }
 
             }
-        });
+        }
+
+        if (game.getNpcs()) {
+            cinematic.getUuids().forEach(uuid -> {
+                var player = Bukkit.getPlayer(uuid);
+                if (player != null && player.getGameMode() == GameMode.ADVENTURE
+                        || player.getGameMode() == GameMode.SURVIVAL) {
+                    game.spawnClone(player, cinematic);
+                }
+            });
+        }
+
+        if (game.getAutoHide()) {
+            game.hide(true);
+        }
+
+        for (var uuid : uuids) {
+            var player = Bukkit.getPlayer(uuid);
+            if (player != null) {
+                player.setGameMode(GameMode.SPECTATOR);
+            }
+
+        }
 
     }
 
     @EventHandler
     public void onCinematicFinish(CinematicFinishEvent e) {
-        Bukkit.getScheduler().runTask(instance, task -> {
-            var game = instance.getGame();
-            var cinematic = e.getCinematicProgress();
-            var uuids = cinematic.getUuids();
-            var playerInfoList = cinematic.getPlayerInfo();
+        var game = instance.getGame();
+        var cinematic = e.getCinematicProgress();
+        var uuids = cinematic.getUuids();
+        var playerInfoList = cinematic.getPlayerInfo();
 
-            if (game.getRestoreGamemode()) {
-                for (var uuid : uuids) {
-                    var player = Bukkit.getPlayer(uuid);
-                    if (player != null) {
-                        var playerInfo = playerInfoList.get(uuid);
-                        player.setGameMode(playerInfo.getGamemode());
-                    }
+        if (game.getRestoreGamemode()) {
+            for (var uuid : uuids) {
+                var player = Bukkit.getPlayer(uuid);
+                if (player != null) {
+                    var playerInfo = playerInfoList.get(uuid);
+                    player.setGameMode(playerInfo.getGamemode());
                 }
             }
+        }
 
-            if (game.getRestoreLocation()) {
-                for (var uuid : uuids) {
-                    var player = Bukkit.getPlayer(uuid);
-                    if (player != null) {
-                        var playerInfo = playerInfoList.get(uuid);
-                        player.teleport(playerInfo.getLocation());
-                    }
+        if (game.getRestoreLocation()) {
+            for (var uuid : uuids) {
+                var player = Bukkit.getPlayer(uuid);
+                if (player != null) {
+                    var playerInfo = playerInfoList.get(uuid);
+                    player.teleport(playerInfo.getLocation());
                 }
             }
+        }
 
-            if (game.getRestoreGamemode() || game.getRestoreLocation()) {
-                for (var uuid : uuids) {
-                    var player = Bukkit.getPlayer(uuid);
-                    if (player != null) {
-                        player.addPotionEffect(
-                                new PotionEffect(PotionEffectType.BLINDNESS, 20, 20, false, false, false));
-                    }
-
+        if (game.getRestoreGamemode() || game.getRestoreLocation()) {
+            for (var uuid : uuids) {
+                var player = Bukkit.getPlayer(uuid);
+                if (player != null) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 20, false, false, false));
                 }
+
             }
+        }
 
-            if (game.getNpcs()) {
+        if (game.getNpcs()) {
 
-                NPCWrapper wrapper = NPCWrapper.create(cinematic.getSpawnedNpcs());
+            NPCWrapper wrapper = NPCWrapper.create(cinematic.getSpawnedNpcs());
 
-                wrapper.deleteAll();
+            wrapper.deleteAll();
 
-                cinematic.getSpawnedNpcs().clear();
-            }
+            cinematic.getSpawnedNpcs().clear();
+        }
 
-            if (game.getAutoHide()) {
-                game.hide(false);
-            }
-        });
+        if (game.getAutoHide()) {
+            game.hide(false);
+        }
     }
 }
