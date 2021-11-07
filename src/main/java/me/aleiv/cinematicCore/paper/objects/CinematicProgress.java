@@ -35,11 +35,16 @@ public class CinematicProgress {
         var timedEvents = scenes.get(0).getTimedEvents();
         if(timedEvents.containsKey(currentTick)){
             var event = timedEvents.get(currentTick);
-            for (var string : event) {
-                Bukkit.getScheduler().runTask(instance, task ->{ 
+            try {
+                for (var string : event) {
+                    System.out.println("TRYING " + event);
+                    
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), string);
-                });
+                }   
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            
         }
     }
 
