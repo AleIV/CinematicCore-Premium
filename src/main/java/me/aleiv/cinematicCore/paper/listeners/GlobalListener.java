@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import io.github.znetworkw.znpcservers.NPCLibrary;
+import io.github.znetworkw.znpcservers.NPCWrapper;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import me.aleiv.cinematicCore.paper.CinematicTool;
 import me.aleiv.cinematicCore.paper.events.CinematicFinishEvent;
@@ -87,8 +87,9 @@ public class GlobalListener implements Listener {
             }
 
             if (game.getNpcs()) {
-                Bukkit.getOnlinePlayers().forEach(player -> {
-                    if (player.getGameMode() == GameMode.ADVENTURE || player.getGameMode() == GameMode.SURVIVAL) {
+                cinematic.getUuids().forEach(uuid ->{
+                    var player = Bukkit.getPlayer(uuid);
+                    if (player != null && player.getGameMode() == GameMode.ADVENTURE || player.getGameMode() == GameMode.SURVIVAL) {
                         game.spawnClone(player, cinematic);
                     }
                 });
@@ -149,10 +150,11 @@ public class GlobalListener implements Listener {
             }
 
             if (game.getNpcs()) {
-                cinematic.getSpawnedNpcs().forEach(npc -> {
-                    NPCLibrary.deleteNPC(npc.getNpcPojo().getId());
 
-                });
+                NPCWrapper wrapper = NPCWrapper.create(cinematic.getSpawnedNpcs());
+
+                wrapper.deleteAll();
+
                 cinematic.getSpawnedNpcs().clear();
             }
 

@@ -111,13 +111,6 @@ public class CinematicTool extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(listener, instance);
     }
 
-    /*public void adminMessage(String text) {
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            if (player.hasPermission("admin.perm"))
-                player.sendMessage(text);
-        });
-    }*/
-
     public Component componentToString(String str) {
         return miniMessage.parse(str);
     }
