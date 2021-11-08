@@ -435,6 +435,51 @@ public class CinematicCMD extends BaseCommand {
 
     }
 
+    @Subcommand("remove-frames")
+    public void removeFrames(Player sender, String cinematic, Integer amount) {
+        var game = instance.getGame();
+        var cinematics = game.getCinematics();
+        if (!cinematics.containsKey(cinematic)) {
+            sender.sendMessage(ChatColor.RED + "Cinematic doesn't exist.");
+
+        } else {
+            var cine = cinematics.get(cinematic);
+            var frames = cine.getFrames();
+
+            if (frames.size() <= amount) {
+                sender.sendMessage(ChatColor.RED + "Frames are not enough.");
+
+            } else {
+                for (int i = 0; i < frames.size(); i++) {
+                    if(i >= frames.size()-amount){
+                        frames.remove(i);
+                    }
+                }
+            }
+
+            instance.updateJson();
+            sender.sendMessage(ChatColor.DARK_AQUA + "" + amount + " frames removed from " + cinematic);
+
+        }
+
+    }
+
+    @Subcommand("check-frame")
+    public void checkCurrentFrame(Player sender) {
+        var game = instance.getGame();
+        var cinematicProgress = game.getCinematicProgress(sender);
+
+        if (cinematicProgress != null) {
+            var currentTick = cinematicProgress.getTask().getCurrentTask();
+
+            sender.sendMessage(ChatColor.DARK_AQUA + "Current frame: " + currentTick);
+        } else {
+
+            sender.sendMessage(ChatColor.RED + "You are not in a cinematic.");
+        }
+
+    }
+
     @Subcommand("add-event-timed")
     public void eventTimed(Player sender, String cinematic, Integer currentTick, String event) {
         var game = instance.getGame();
