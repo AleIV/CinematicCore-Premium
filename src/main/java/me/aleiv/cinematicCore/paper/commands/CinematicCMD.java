@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -12,6 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
@@ -31,6 +34,37 @@ public class CinematicCMD extends BaseCommand {
     public CinematicCMD(CinematicTool instance) {
         this.instance = instance;
 
+        var manager = instance.getCommandManager();
+
+        manager.getCommandCompletions().registerAsyncCompletion("bool", c -> {
+            return ImmutableList.of("true", "false");
+        });
+
+        manager.getCommandCompletions().registerAsyncCompletion("name", c -> {
+            return ImmutableList.of("scene-name");
+        });
+
+        manager.getCommandCompletions().registerAsyncCompletion("ticks", c -> {
+            return ImmutableList.of("time-in-ticks");
+        });
+
+        manager.getCommandCompletions().registerAsyncCompletion("ticksremove", c -> {
+            return ImmutableList.of("time-in-ticks-to-remove");
+        });
+
+        manager.getCommandCompletions().registerAsyncCompletion("scenes", c -> {
+            return ImmutableList.of("scenes...");
+        });
+
+        manager.getCommandCompletions().registerAsyncCompletion("newname", c -> {
+            return ImmutableList.of("new-scene-name");
+        });
+
+        manager.getCommandCompletions().registerAsyncCompletion("event", c -> {
+            return ImmutableList.of("command-to-execute");
+        });
+
+        
     }
 
     @Default
@@ -78,6 +112,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("rec|record")
+    @CommandCompletion("@name")
     public void rec(Player sender, String cinematic) {
 
         var game = instance.getGame();
@@ -123,7 +158,8 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("rec|record")
-    public void rec(Player sender, String cinematic, Integer seconds) {
+    @CommandCompletion("@name @ticks")
+    public void rec(Player sender, String cinematic, Integer ticks) {
 
         var game = instance.getGame();
         var cinematics = game.getCinematics();
@@ -138,7 +174,7 @@ public class CinematicCMD extends BaseCommand {
         } else {
             List<Frame> frames = new ArrayList<>();
             var newCinematic = new Cinematic(cinematic, frames, new HashMap<>());
-            game.record(sender, frames, seconds);
+            game.record(sender, frames, ticks);
             game.getCinematics().put(cinematic, newCinematic);
 
             instance.updateJson();
@@ -146,6 +182,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("rec-static|record-static")
+    @CommandCompletion("@name @ticks")
     public void recStatic(Player sender, String cinematic, Integer ticks) {
 
         var game = instance.getGame();
@@ -192,6 +229,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("play")
+    @CommandCompletion("@bool @scenes")
     public void play(CommandSender sender, Boolean bool, String... cinematic) {
 
         var game = instance.getGame();
@@ -235,14 +273,16 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("globalmute")
-    public void globalmute(CommandSender sender) {
+    @CommandCompletion("@bool")
+    public void globalmute(CommandSender sender, Boolean bool) {
         var game = instance.getGame();
-        game.setGlobalmute(!game.getGlobalmute());
+        game.setGlobalmute(bool);
         sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic globalmute " + game.getGlobalmute());
 
     }
 
     @Subcommand("npcs")
+    @CommandCompletion("@bool")
     public void npcs(CommandSender sender, Boolean bool) {
         var game = instance.getGame();
         game.setNpcs(bool);
@@ -251,6 +291,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("fade")
+    @CommandCompletion("@bool")
     public void fade(CommandSender sender, Boolean bool) {
         var game = instance.getGame();
         game.setFade(bool);
@@ -259,6 +300,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("autoHide")
+    @CommandCompletion("@bool")
     public void autoHide(CommandSender sender, Boolean bool) {
         var game = instance.getGame();
         game.setAutoHide(bool);
@@ -267,6 +309,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("restoreGamemode")
+    @CommandCompletion("@bool")
     public void restoreGamemode(CommandSender sender, Boolean bool) {
         var game = instance.getGame();
         game.setRestoreGamemode(bool);
@@ -275,6 +318,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("restoreLocation")
+    @CommandCompletion("@bool")
     public void restoreLocation(CommandSender sender, Boolean bool) {
         var game = instance.getGame();
         game.setRestoreLocation(bool);
@@ -283,6 +327,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("hide")
+    @CommandCompletion("@bool")
     public void hide(CommandSender sender, Boolean bool) {
         var game = instance.getGame();
         game.hide(bool);
@@ -299,6 +344,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("delete")
+    @CommandCompletion("@name")
     public void delete(CommandSender sender, String cinematic) {
         var game = instance.getGame();
         var cinematics = game.getCinematics();
@@ -314,6 +360,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("merge")
+    @CommandCompletion("@newname @name @name")
     public void merge(CommandSender sender, String name, String cinematic1, String cinematic2) {
         var game = instance.getGame();
         var cinematics = game.getCinematics();
@@ -347,6 +394,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("clone")
+    @CommandCompletion("@name @newname")
     public void clone(CommandSender sender, String cinematic1, String cinematic2) {
         var game = instance.getGame();
         var cinematics = game.getCinematics();
@@ -377,6 +425,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("rename")
+    @CommandCompletion("@name @newname")
     public void rename(CommandSender sender, String cinematic, String name) {
         var game = instance.getGame();
         var cinematics = game.getCinematics();
@@ -401,6 +450,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("add-event")
+    @CommandCompletion("@name @event")
     public void event(Player sender, String cinematic, String event) {
         var game = instance.getGame();
         var cinematics = game.getCinematics();
@@ -436,6 +486,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("remove-frames")
+    @CommandCompletion("@name @ticksremove")
     public void removeFrames(Player sender, String cinematic, Integer amount) {
         var game = instance.getGame();
         var cinematics = game.getCinematics();
@@ -481,6 +532,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("add-event-timed")
+    @CommandCompletion("@name @ticks @event")
     public void eventTimed(Player sender, String cinematic, Integer currentTick, String event) {
         var game = instance.getGame();
         var cinematics = game.getCinematics();
@@ -510,6 +562,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("delete-event")
+    @CommandCompletion("@name @ticks")
     public void deleteEvent(CommandSender sender, String cinematic, Integer event) {
         var game = instance.getGame();
         var cinematics = game.getCinematics();
@@ -536,6 +589,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Subcommand("event-list")
+    @CommandCompletion("@name")
     public void eventList(CommandSender sender, String cinematic) {
         var game = instance.getGame();
         var cinematics = game.getCinematics();
