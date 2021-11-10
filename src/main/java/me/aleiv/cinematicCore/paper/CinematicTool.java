@@ -25,7 +25,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.Title.Times;
-import us.jcedeno.libs.rapidinv.RapidInvManager;
 
 
 @SpigotPlugin
@@ -44,7 +43,6 @@ public class CinematicTool extends JavaPlugin {
 
         game = new Game(this);
 
-        RapidInvManager.register(this);
         BukkitTCT.registerPlugin(this);
         this.npcLibrary = new NPCLibrary();
         this.npcLibrary.register(this);
