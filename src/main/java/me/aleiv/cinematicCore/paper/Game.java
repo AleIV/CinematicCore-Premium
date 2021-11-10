@@ -29,7 +29,7 @@ public class Game{
     CinematicTool instance;
 
     Boolean globalmute = false;
-    Boolean npcs = true;
+    Boolean npcs = false;
     Boolean fade = true;
     Boolean autoHide = false;
     Boolean restoreLocation = true;
@@ -82,19 +82,22 @@ public class Game{
 
         List<Integer> list = new ArrayList<>();
 
-        if(fade) sendBlack();
+        if(fade){
+            sendBlack();
+
+            task.addWithDelay(new BukkitRunnable() {
+                @Override
+                public void run() {
+                    
+                }
+    
+            }, 50 * 110);
+
+        }
 
         var scenes = Arrays.asList(cinematic).stream().map(name -> cinematics.get(name)).toList();
         var actualCinematic = new CinematicProgress(scenes, uuids, task, instance);
         cinematicProgressList.add(actualCinematic);
-
-        task.addWithDelay(new BukkitRunnable() {
-            @Override
-            public void run() {
-                
-            }
-
-        }, 50 * 110);
 
         task.add(new BukkitRunnable() {
             @Override
