@@ -185,7 +185,7 @@ public class Game{
         recording.remove(uuid);
         cinematics.put(cinematic.getName(), cinematic);
 
-        instance.updateJson();
+        instance.pushJson();
     }
 
     public void recordStatic(Player player, String cinematic, Integer ticks) {
@@ -204,7 +204,7 @@ public class Game{
 
         cinematics.put(cinematic, newCinematic);
 
-        instance.updateJson();
+        instance.pushJson();
     }
 
     public CinematicProgress getCinematicProgress(Player player){

@@ -177,7 +177,7 @@ public class CinematicCMD extends BaseCommand {
             game.record(sender, frames, ticks);
             game.getCinematics().put(cinematic, newCinematic);
 
-            instance.updateJson();
+            instance.pushJson();
         }
     }
 
@@ -265,10 +265,17 @@ public class CinematicCMD extends BaseCommand {
 
     }
 
-    @Subcommand("save")
-    public void save(CommandSender sender) {
-        instance.updateJson();
-        sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic files updated.");
+    @Subcommand("push")
+    public void push(CommandSender sender) {
+        instance.pushJson();
+        sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic files pushed.");
+
+    }
+
+    @Subcommand("pull")
+    public void pull(CommandSender sender) {
+        instance.pullJson();
+        sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic files pulled.");
 
     }
 
@@ -354,7 +361,7 @@ public class CinematicCMD extends BaseCommand {
             cinematics.remove(cinematic);
             sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic + " deleted.");
 
-            instance.updateJson();
+            instance.pushJson();
         }
 
     }
@@ -387,7 +394,7 @@ public class CinematicCMD extends BaseCommand {
 
             sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic1 + " and " + cinematic2 + " merged.");
 
-            instance.updateJson();
+            instance.pushJson();
 
         }
 
@@ -418,7 +425,7 @@ public class CinematicCMD extends BaseCommand {
 
             sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic1 + " cloned in " + cinematic2);
 
-            instance.updateJson();
+            instance.pushJson();
 
         }
 
@@ -444,7 +451,7 @@ public class CinematicCMD extends BaseCommand {
 
             sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic " + cinematic + " renamed to " + name);
 
-            instance.updateJson();
+            instance.pushJson();
 
         }
     }
@@ -474,7 +481,7 @@ public class CinematicCMD extends BaseCommand {
                     cine.getTimedEvents().put(currentTick, list);
                 }
 
-                instance.updateJson();
+                instance.pushJson();
                 sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic event added to " + cinematic + ". Event: " + event);
             } else {
                 sender.sendMessage(ChatColor.RED + "You are not in a cinematic.");
@@ -508,7 +515,7 @@ public class CinematicCMD extends BaseCommand {
                 }
             }
 
-            instance.updateJson();
+            instance.pushJson();
             sender.sendMessage(ChatColor.DARK_AQUA + "" + amount + " frames removed from " + cinematic);
 
         }
@@ -553,7 +560,7 @@ public class CinematicCMD extends BaseCommand {
                 cine.getTimedEvents().put(currentTick, list);
             }
 
-            instance.updateJson();
+            instance.pushJson();
             sender.sendMessage(
                     ChatColor.DARK_AQUA + "Cinematic timed event added to " + cinematic + ". Event: " + event);
 
@@ -578,7 +585,7 @@ public class CinematicCMD extends BaseCommand {
                 sender.sendMessage(
                         ChatColor.DARK_AQUA + "Cinematic event removed from " + cinematic + ". Event: " + event);
 
-                instance.updateJson();
+                instance.pushJson();
             } else {
                 sender.sendMessage(ChatColor.RED + "Cinematic event doesn't exist.");
 

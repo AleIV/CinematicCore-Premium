@@ -87,7 +87,7 @@ public class CinematicTool extends JavaPlugin {
         this.npcLibrary.unregister();
     }
 
-    public void updateJson(){
+    public void pushJson(){
         var list = game.getCinematics();
 
         try {
@@ -96,6 +96,28 @@ public class CinematicTool extends JavaPlugin {
             var obj = gson.fromJson(json, JsonObject.class);
             jsonConfig.setJsonObject(obj);
             jsonConfig.save();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public void pullJson(){
+        try {
+            var jsonConfig = new JsonConfig("cinematics.json");
+            var list = jsonConfig.getJsonObject();
+            var iter = list.entrySet().iterator();
+            var map = game.getCinematics();
+
+            while (iter.hasNext()) {
+                var entry = iter.next();
+                var name = entry.getKey();
+                var value = entry.getValue();
+                var cinematic = gson.fromJson(value, Cinematic.class);
+                map.put(name, cinematic);
+
+            }
 
         } catch (Exception e) {
 
