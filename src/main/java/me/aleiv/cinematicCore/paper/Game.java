@@ -11,7 +11,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import io.github.znetworkw.znpcservers.NPCLibrary;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import me.aleiv.cinematicCore.paper.events.CinematicFinishEvent;
@@ -22,6 +21,7 @@ import me.aleiv.cinematicCore.paper.objects.CinematicProgress;
 import me.aleiv.cinematicCore.paper.objects.Frame;
 import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
+import uk.lewdev.entitylib.entity.FakePlayer;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -59,8 +59,9 @@ public class Game{
                 task.addWithDelay(new BukkitRunnable() {
                     @Override
                     public void run() {
-                        instance.sendActionBar(player, ChatColor.YELLOW + "" + c + "/" + seconds);
+                        player.sendMessage(ChatColor.YELLOW + "" + c + "/" + seconds);
                         var loc = player.getLocation().clone();
+
                         var frame = new Frame(loc.getWorld().getName().toString(), loc.getX(), loc.getY(), loc.getZ(),
                                 loc.getYaw(), loc.getPitch());
                         frames.add(frame);
@@ -165,11 +166,13 @@ public class Game{
 
     public void spawnClone(Player player, CinematicProgress cinematic){
         var loc = player.getLocation();
-        var npc = NPCLibrary.createPlayerNPC(loc, player.getName(), false, player.getInventory(), player);
-        npc.getViewers().forEach(npc::spawn);
-        
+        var prof = player.getPlayer();
 
-        cinematic.getSpawnedNpcs().add(npc);
+        //var npc = FakePlayer.of(sender.getName(), loc, prof.getValue(), prof.getSignature());
+
+        //npc.show(sender);
+
+        //cinematic.getSpawnedNpcs().add(npc);
     }
 
     public void startRecord(Player player, String cinematic) {

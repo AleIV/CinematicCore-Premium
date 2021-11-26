@@ -1,7 +1,5 @@
 package me.aleiv.cinematicCore.paper;
 
-import java.time.Duration;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -13,7 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import co.aikar.commands.PaperCommandManager;
-import io.github.znetworkw.znpcservers.NPCLibrary;
 import kr.entree.spigradle.annotations.SpigotPlugin;
 import lombok.Getter;
 import me.aleiv.cinematicCore.paper.commands.CinematicCMD;
@@ -23,8 +20,6 @@ import me.aleiv.cinematicCore.paper.utilities.JsonConfig;
 import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.title.Title;
-import net.kyori.adventure.title.Title.Times;
 
 
 @SpigotPlugin
@@ -35,7 +30,7 @@ public class CinematicTool extends JavaPlugin {
     private @Getter PaperCommandManager commandManager;
     private @Getter static MiniMessage miniMessage = MiniMessage.get();
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private @Getter NPCLibrary npcLibrary;
+    //private @Getter NPCLibrary npcLibrary;
 
     @Override
     public void onEnable() {
@@ -44,9 +39,6 @@ public class CinematicTool extends JavaPlugin {
         game = new Game(this);
 
         BukkitTCT.registerPlugin(this);
-        this.npcLibrary = new NPCLibrary();
-        this.npcLibrary.register(this);
-        
 
         //LISTENERS
 
@@ -82,7 +74,7 @@ public class CinematicTool extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        this.npcLibrary.unregister();
+
     }
 
     public void pushJson(){
@@ -135,25 +127,8 @@ public class CinematicTool extends JavaPlugin {
         return miniMessage.parse(str);
     }
 
-    public void broadcastMessage(String text) {
-        Bukkit.broadcast(miniMessage.parse(text));
-    }
-
-    public void sendActionBar(Player player, String text) {
-        player.sendActionBar(miniMessage.parse(text));
-    }
-
     public void showTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        player.showTitle(Title.title(miniMessage.parse(title), miniMessage.parse(subtitle), Times
-                .of(Duration.ofMillis(50 * fadeIn), Duration.ofMillis(50 * stay), Duration.ofMillis(50 * fadeIn))));
-    }
-
-    public void sendHeader(Player player, String text) {
-        player.sendPlayerListHeader(miniMessage.parse(text));
-    }
-
-    public void sendFooter(Player player, String text) {
-        player.sendPlayerListFooter(miniMessage.parse(text));
+        player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
     }
 
 }

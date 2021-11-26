@@ -1,13 +1,11 @@
 package me.aleiv.cinematicCore.paper.objects;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 
-import io.github.znetworkw.znpcservers.npc.NPC;
 import lombok.Data;
 import me.aleiv.cinematicCore.paper.CinematicTool;
 import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
@@ -21,7 +19,7 @@ public class CinematicProgress {
     BukkitTCT task;
 
     HashMap<UUID, PlayerInfo> playerInfo = new HashMap<>();
-    List<NPC> spawnedNpcs = new ArrayList<>();
+    //List<NPC> spawnedNpcs = new ArrayList<>();
 
     public CinematicProgress(List<Cinematic> scenes, List<UUID> uuids, BukkitTCT task, CinematicTool instance){
         this.scenes = scenes;

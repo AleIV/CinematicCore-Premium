@@ -5,12 +5,11 @@ import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import io.github.znetworkw.znpcservers.NPCWrapper;
-import io.papermc.paper.event.player.AsyncChatEvent;
 import me.aleiv.cinematicCore.paper.CinematicTool;
 import me.aleiv.cinematicCore.paper.events.CinematicFinishEvent;
 import me.aleiv.cinematicCore.paper.events.CinematicStartEvent;
@@ -31,6 +30,8 @@ public class GlobalListener implements Listener {
         Bukkit.getScheduler().runTask(instance, task -> {
             var cinematicProgress = e.getCinematicProgress();
             cinematicProgress.checkEvent();
+            //var currentTick = cinematicProgress.getTask().getCurrentTask();
+            //instance.broadcastMessage(currentTick + " " + cinematicProgress.getScenes().get(0).getFrames().get(currentTick).toString());
         });
     }
 
@@ -62,7 +63,7 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void checkForMute(AsyncChatEvent e) {
+    public void checkForMute(AsyncPlayerChatEvent e) {
         var game = instance.getGame();
         if (game.getGlobalmute() && !e.getPlayer().hasPermission("globalmute.talk")) {
             e.setCancelled(true);
@@ -148,11 +149,12 @@ public class GlobalListener implements Listener {
 
         if (game.getNpcs()) {
 
-            NPCWrapper wrapper = NPCWrapper.create(cinematic.getSpawnedNpcs());
+            //TODO: delete NPCS
+            /*NPCWrapper wrapper = NPCWrapper.create(cinematic.getSpawnedNpcs());
 
             wrapper.deleteAll();
 
-            cinematic.getSpawnedNpcs().clear();
+            cinematic.getSpawnedNpcs().clear();*/
         }
 
         if (game.getAutoHide()) {

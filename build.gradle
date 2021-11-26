@@ -40,9 +40,12 @@ repositories {
 
 
 dependencies {
-    //Paper
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    //Spigot
+    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
     //Lombok
+    
+    //PROTOCOL LIB
+    compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0";
     // MiniMessage
     implementation 'net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT'
 
@@ -52,8 +55,6 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
     //ACF
     implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
-    //NPC
-    implementation 'us.jcedeno:znpc-servers:1.0.3.2'
 
 }
 
