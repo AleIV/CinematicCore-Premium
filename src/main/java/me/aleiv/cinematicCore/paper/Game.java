@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import com.comphenix.protocol.wrappers.WrappedGameProfile;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -25,7 +27,7 @@ import uk.lewdev.entitylib.entity.FakePlayer;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Game{
+public class Game {
     CinematicTool instance;
 
     Boolean globalmute = false;
@@ -41,8 +43,7 @@ public class Game{
     HashMap<UUID, Cinematic> recording = new HashMap<>();
     List<CinematicProgress> cinematicProgressList = new ArrayList<>();
 
-
-    public Game(CinematicTool instance){
+    public Game(CinematicTool instance) {
         this.instance = instance;
 
         recordingListener = new RecordingListener(instance);
@@ -83,15 +84,15 @@ public class Game{
 
         List<Integer> list = new ArrayList<>();
 
-        if(fade){
+        if (fade) {
             sendBlack();
 
             task.addWithDelay(new BukkitRunnable() {
                 @Override
                 public void run() {
-                    
+
                 }
-    
+
             }, 50 * 110);
 
         }
@@ -105,7 +106,7 @@ public class Game{
             public void run() {
                 Bukkit.getPluginManager().callEvent(new CinematicStartEvent(actualCinematic, false));
             }
-            
+
         });
 
         for (var str : cinematic) {
@@ -123,7 +124,7 @@ public class Game{
                     public void run() {
                         uuids.forEach(uuid -> {
                             var player = Bukkit.getPlayer(uuid);
-                            if(player != null){
+                            if (player != null) {
                                 player.teleport(loc);
                             }
                         });
@@ -136,7 +137,7 @@ public class Game{
 
         }
 
-        if(fade){
+        if (fade) {
             var task2 = new BukkitTCT();
 
             for (var integer : list) {
@@ -145,10 +146,10 @@ public class Game{
                     public void run() {
                         sendBlack();
                     }
-    
+
                 }, ((50 * integer) + 50 * 110) - (50 * 110));
             }
-    
+
             task2.execute();
         }
 
@@ -156,7 +157,7 @@ public class Game{
 
         completable.thenAccept(bool -> {
             cinematicProgressList.remove(actualCinematic);
-            Bukkit.getScheduler().runTask(instance, Btask ->{
+            Bukkit.getScheduler().runTask(instance, Btask -> {
                 Bukkit.getPluginManager().callEvent(new CinematicFinishEvent(actualCinematic, false));
             });
 
@@ -164,15 +165,20 @@ public class Game{
 
     }
 
-    public void spawnClone(Player player, CinematicProgress cinematic){
+    public void spawnClone(Player player, CinematicProgress cinematic) {
         var loc = player.getLocation();
         var prof = player.getPlayer();
 
-        //var npc = FakePlayer.of(sender.getName(), loc, prof.getValue(), prof.getSignature());
+        var property = WrappedGameProfile.fromPlayer(player).getProperties().entries().iterator().next().getValue();
 
-        //npc.show(sender);
+        var playerSkinValue = property.getValue();
+        var playerSkinSignature = property.getSignature();
 
-        //cinematic.getSpawnedNpcs().add(npc);
+        var npc = FakePlayer.of(player.getName(), loc, playerSkinValue, playerSkinSignature);
+
+        npc.show(player);
+
+        cinematic.getSpawnedNpcs().add(npc);
     }
 
     public void startRecord(Player player, String cinematic) {
@@ -210,8 +216,9 @@ public class Game{
         instance.pushJson();
     }
 
-    public CinematicProgress getCinematicProgress(Player player){
-        return cinematicProgressList.stream().filter(cine -> cine.isViewer(player.getUniqueId())).findAny().orElse(null);
+    public CinematicProgress getCinematicProgress(Player player) {
+        return cinematicProgressList.stream().filter(cine -> cine.isViewer(player.getUniqueId())).findAny()
+                .orElse(null);
     }
 
     public void sendBlack() {
@@ -238,7 +245,5 @@ public class Game{
         }
 
     }
-
-    
 
 }
