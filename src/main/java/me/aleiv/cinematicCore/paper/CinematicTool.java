@@ -20,6 +20,7 @@ import me.aleiv.cinematicCore.paper.utilities.JsonConfig;
 import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import uk.lewdev.entitylib.FakeEntityPlugin;
 
 
 @SpigotPlugin
@@ -30,7 +31,7 @@ public class CinematicTool extends JavaPlugin {
     private @Getter PaperCommandManager commandManager;
     private @Getter static MiniMessage miniMessage = MiniMessage.get();
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    //private @Getter NPCLibrary npcLibrary;
+    private @Getter FakeEntityPlugin fakeEntityPlugin;
 
     @Override
     public void onEnable() {
@@ -39,6 +40,10 @@ public class CinematicTool extends JavaPlugin {
         game = new Game(this);
 
         BukkitTCT.registerPlugin(this);
+        this.fakeEntityPlugin = new FakeEntityPlugin();
+
+        this.fakeEntityPlugin.onEnable();
+
 
         //LISTENERS
 
@@ -70,11 +75,18 @@ public class CinematicTool extends JavaPlugin {
             e.printStackTrace();
         }
 
+
+
     }
 
     @Override
     public void onDisable() {
+        try {
+            this.fakeEntityPlugin.onDisable();
 
+        }catch (Exception e) {
+            
+        }
     }
 
     public void pushJson(){
