@@ -167,8 +167,6 @@ public class Game {
 
     public void spawnClone(Player player, CinematicProgress cinematic) {
         var loc = player.getLocation();
-        var prof = player.getPlayer();
-
         var property = WrappedGameProfile.fromPlayer(player).getProperties().entries().iterator().next().getValue();
 
         var playerSkinValue = property.getValue();
@@ -176,7 +174,10 @@ public class Game {
 
         var npc = FakePlayer.of(player.getName(), loc, playerSkinValue, playerSkinSignature);
 
-        npc.show(player);
+        var players = Bukkit.getOnlinePlayers();
+        for (var p : players) {
+            npc.show(p);
+        }
 
         cinematic.getSpawnedNpcs().add(npc);
     }

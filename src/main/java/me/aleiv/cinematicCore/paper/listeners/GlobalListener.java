@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -30,8 +31,6 @@ public class GlobalListener implements Listener {
         Bukkit.getScheduler().runTask(instance, task -> {
             var cinematicProgress = e.getCinematicProgress();
             cinematicProgress.checkEvent();
-            //var currentTick = cinematicProgress.getTask().getCurrentTask();
-            //instance.broadcastMessage(currentTick + " " + cinematicProgress.getScenes().get(0).getFrames().get(currentTick).toString());
         });
     }
 
@@ -59,6 +58,17 @@ public class GlobalListener implements Listener {
         var uuid = e.getPlayer().getUniqueId();
         if (recording.containsKey(uuid)) {
             recording.remove(uuid);
+        }
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e){
+        var player = e.getPlayer();
+        var cinematics = instance.getGame().getCinematicProgressList();
+        for (var cinematicProgress : cinematics) {
+            for (var fakePlayer : cinematicProgress.getSpawnedNpcs()) {
+                fakePlayer.show(player);
+            }
         }
     }
 
@@ -149,12 +159,15 @@ public class GlobalListener implements Listener {
 
         if (game.getNpcs()) {
 
-            //TODO: delete NPCS
-            /*NPCWrapper wrapper = NPCWrapper.create(cinematic.getSpawnedNpcs());
+            var npcs = cinematic.getSpawnedNpcs();
+            var players = Bukkit.getOnlinePlayers();
+            for (var player : players) {
+                for (var npc : npcs) {
+                    npc.hide(player);
+                }
+            }
 
-            wrapper.deleteAll();
-
-            cinematic.getSpawnedNpcs().clear();*/
+            npcs.clear();
         }
 
         if (game.getAutoHide()) {
