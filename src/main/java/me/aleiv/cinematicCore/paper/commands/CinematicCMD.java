@@ -35,36 +35,13 @@ public class CinematicCMD extends BaseCommand {
         this.instance = instance;
 
         var manager = instance.getCommandManager();
-
-        manager.getCommandCompletions().registerAsyncCompletion("bool", c -> {
-            return ImmutableList.of("true", "false");
-        });
-
-        manager.getCommandCompletions().registerAsyncCompletion("name", c -> {
-            return ImmutableList.of("scene-name");
-        });
-
-        manager.getCommandCompletions().registerAsyncCompletion("ticks", c -> {
-            return ImmutableList.of("time-in-ticks");
-        });
-
-        manager.getCommandCompletions().registerAsyncCompletion("ticksremove", c -> {
-            return ImmutableList.of("time-in-ticks-to-remove");
-        });
-
-        manager.getCommandCompletions().registerAsyncCompletion("scenes", c -> {
-            return ImmutableList.of("scenes...");
-        });
-
-        manager.getCommandCompletions().registerAsyncCompletion("newname", c -> {
-            return ImmutableList.of("new-scene-name");
-        });
-
-        manager.getCommandCompletions().registerAsyncCompletion("event", c -> {
-            return ImmutableList.of("command-to-execute");
-        });
-
-        
+        manager.getCommandCompletions().registerStaticCompletion("bool", ImmutableList.of("true", "false"));
+        manager.getCommandCompletions().registerStaticCompletion("name", ImmutableList.of("scene-name"));
+        manager.getCommandCompletions().registerStaticCompletion("ticks", ImmutableList.of("time-in-ticks"));
+        manager.getCommandCompletions().registerStaticCompletion("ticksremove", ImmutableList.of("time-in-ticks-to-remove"));
+        manager.getCommandCompletions().registerStaticCompletion("scenes", ImmutableList.of("scenes..."));
+        manager.getCommandCompletions().registerStaticCompletion("newname", ImmutableList.of("new-scene-name"));
+        manager.getCommandCompletions().registerStaticCompletion("event", ImmutableList.of("event-name"));
     }
 
     @Default
