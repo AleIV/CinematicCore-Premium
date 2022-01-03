@@ -45,6 +45,7 @@ public class CinematicCMD extends BaseCommand {
     }
 
     @Default
+    @Subcommand("help")
     public void info(CommandSender sender) {
         sender.sendMessage(ChatColor.DARK_AQUA + "Cinematic Tool");
         sender.sendMessage(
