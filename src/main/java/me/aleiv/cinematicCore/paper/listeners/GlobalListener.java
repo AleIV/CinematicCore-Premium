@@ -61,7 +61,8 @@ public class GlobalListener implements Listener {
         }
     }
 
-    @EventHandler
+    // Not needed anymore
+    /*@EventHandler
     public void onJoin(PlayerJoinEvent e){
         var player = e.getPlayer();
         var cinematics = instance.getGame().getCinematicProgressList();
@@ -70,7 +71,7 @@ public class GlobalListener implements Listener {
                 fakePlayer.show(player);
             }
         }
-    }
+    }*/
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void checkForMute(AsyncPlayerChatEvent e) {
@@ -158,15 +159,8 @@ public class GlobalListener implements Listener {
         }
 
         if (game.getNpcs()) {
-
             var npcs = cinematic.getSpawnedNpcs();
-            var players = Bukkit.getOnlinePlayers();
-            for (var player : players) {
-                for (var npc : npcs) {
-                    npc.hide(player);
-                }
-            }
-
+            npcs.forEach(npc -> this.instance.getNpcPool().removeNPC(npc.getEntityId()));
             npcs.clear();
         }
 
