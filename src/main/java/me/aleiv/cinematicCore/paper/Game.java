@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 
+import com.github.juliarn.npc.NPC;
+import com.github.juliarn.npc.profile.Profile;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -23,7 +25,6 @@ import me.aleiv.cinematicCore.paper.objects.CinematicProgress;
 import me.aleiv.cinematicCore.paper.objects.Frame;
 import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
-import uk.lewdev.entitylib.entity.FakePlayer;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -172,14 +173,15 @@ public class Game {
         var playerSkinValue = property.getValue();
         var playerSkinSignature = property.getSignature();
 
-        var npc = FakePlayer.of(player.getName(), loc, playerSkinValue, playerSkinSignature);
-
-        var players = Bukkit.getOnlinePlayers();
-        for (var p : players) {
-            npc.show(p);
-        }
-
+        NPC npc = NPC.builder().location(player.getLocation()).usePlayerProfiles(true).profile(this.createProfile(player.getUniqueId())).build(this.instance.getNpcPool());
         cinematic.getSpawnedNpcs().add(npc);
+    }
+
+    private Profile createProfile(UUID playerUUID) {
+        Profile profile = new Profile(playerUUID);
+        profile.complete();
+
+        return profile;
     }
 
     public void startRecord(Player player, String cinematic) {
