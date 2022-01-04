@@ -9,8 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.UUID;
 
 @Data
@@ -20,34 +19,36 @@ public class NPCInfo {
     private Location location;
     private boolean overlay;
     private boolean lookAtPlayer;
-    private List<ItemStack> items;
+
+    private HashMap<EnumWrappers.ItemSlot, ItemStack> items;
 
     public NPCInfo(Player player) {
-        this(player, true, false, new ArrayList<>());
+        this(player, true, false);
     }
 
     public NPCInfo(Player player, boolean lookAtPlayer) {
-        this(player, true, lookAtPlayer, new ArrayList<>());
+        this(player, true, lookAtPlayer);
     }
 
     public NPCInfo(Player player, boolean overlay, boolean lookAtPlayer) {
-        this(player, overlay, lookAtPlayer, new ArrayList<>());
-    }
-
-    public NPCInfo(Player player, boolean overlay, boolean lookAtPlayer, List<ItemStack> items) {
         this.profile = this.createProfile(player);
         this.location = player.getLocation();
         this.overlay = overlay;
         this.lookAtPlayer = lookAtPlayer;
-        this.items = items;
+
+        this.items.put(EnumWrappers.ItemSlot.HEAD, player.getInventory().getHelmet());
+        this.items.put(EnumWrappers.ItemSlot.CHEST, player.getInventory().getChestplate());
+        this.items.put(EnumWrappers.ItemSlot.LEGS, player.getInventory().getLeggings());
+        this.items.put(EnumWrappers.ItemSlot.FEET, player.getInventory().getBoots());
+        this.items.put(EnumWrappers.ItemSlot.OFFHAND, player.getInventory().getItemInOffHand());
+        this.items.put(EnumWrappers.ItemSlot.MAINHAND, player.getInventory().getItemInMainHand());
     }
 
-    public NPCInfo(Profile profile, Location location, boolean overlay, boolean lookAtPlayer, List<ItemStack> items) {
+    public NPCInfo(Profile profile, Location location, boolean overlay, boolean lookAtPlayer) {
         this.profile = profile;
         this.location = location;
         this.overlay = overlay;
         this.lookAtPlayer = lookAtPlayer;
-        this.items = items;
     }
 
     private Profile createProfile(Player player) {
@@ -66,27 +67,14 @@ public class NPCInfo {
                 .lookAtPlayer(this.lookAtPlayer)
                 .imitatePlayer(false)
                 .spawnCustomizer((npc, p) -> {
-                    this.items.forEach(item -> npc.equipment().queue(getItemSlot(item), item));
+                    this.items.forEach((slot, item) -> {
+                        if (item != null) {
+                            npc.equipment().queue(slot, item);
+                        }
+                    });
+
                     npc.metadata().queue(MetadataModifier.EntityMetadata.SKIN_LAYERS, this.overlay);
                 });
     }
 
-    private EnumWrappers.ItemSlot getItemSlot(ItemStack item) {
-        if (item.getType().name().contains("HELMET")) {
-            return EnumWrappers.ItemSlot.HEAD;
-        }
-        if (item.getType().name().contains("CHESTPLATE")) {
-            return EnumWrappers.ItemSlot.CHEST;
-        }
-        if (item.getType().name().contains("LEGGINGS")) {
-            return EnumWrappers.ItemSlot.LEGS;
-        }
-        if (item.getType().name().contains("BOOTS")) {
-            return EnumWrappers.ItemSlot.FEET;
-        }
-        if (item.getType().name().contains("SHIELD")) {
-            return EnumWrappers.ItemSlot.OFFHAND;
-        }
-        return EnumWrappers.ItemSlot.MAINHAND;
-    }
 }
