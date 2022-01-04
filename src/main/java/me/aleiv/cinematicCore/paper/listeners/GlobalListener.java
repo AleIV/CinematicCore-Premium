@@ -1,5 +1,6 @@
 package me.aleiv.cinematicCore.paper.listeners;
 
+import me.aleiv.cinematicCore.paper.objects.NPCInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
@@ -102,7 +103,7 @@ public class GlobalListener implements Listener {
                 var player = Bukkit.getPlayer(uuid);
                 if (player != null && player.getGameMode() == GameMode.ADVENTURE
                         || player.getGameMode() == GameMode.SURVIVAL) {
-                    game.spawnClone(player, cinematic);
+                    game.spawnClone(new NPCInfo(player), cinematic);
                 }
             });
         }
