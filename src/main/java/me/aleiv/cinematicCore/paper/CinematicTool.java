@@ -22,6 +22,8 @@ import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
+import java.util.stream.Collectors;
+
 
 @SpigotPlugin
 public class CinematicTool extends JavaPlugin {
@@ -78,7 +80,7 @@ public class CinematicTool extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
+        this.npcPool.getNPCs().stream().toList().forEach(npc -> this.npcPool.removeNPC(npc.getEntityId()));
     }
 
     public void pushJson(){
