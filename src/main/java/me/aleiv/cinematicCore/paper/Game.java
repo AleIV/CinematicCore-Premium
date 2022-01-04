@@ -26,6 +26,8 @@ import me.aleiv.cinematicCore.paper.objects.CinematicProgress;
 import me.aleiv.cinematicCore.paper.objects.Frame;
 import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -160,16 +162,19 @@ public class Game {
         completable.thenAccept(bool -> {
             cinematicProgressList.remove(actualCinematic);
             Bukkit.getScheduler().runTask(instance, Btask -> {
+                Bukkit.getOnlinePlayers().forEach(player -> {
+                    Scoreboard scoreboard = player.getScoreboard();
+                    scoreboard.getTeams().stream().filter(team -> team.getName().startsWith("sb_npc_")).forEach(Team::unregister);
+                });
                 Bukkit.getPluginManager().callEvent(new CinematicFinishEvent(actualCinematic, false));
             });
-
         });
 
     }
 
     public void spawnClone(NPCInfo npcInfo, CinematicProgress cinematic) {
         NPC npc = npcInfo.createBuilder().build(this.instance.getNpcPool());
-        cinematic.getSpawnedNpcs().add(npc);
+        cinematic.getSpawnedNpcs().put(npc, npcInfo);
     }
 
     public void startRecord(Player player, String cinematic) {
