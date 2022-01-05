@@ -32,7 +32,7 @@ public class CinematicTool extends JavaPlugin {
 
     private static @Getter CinematicTool instance;
     private @Getter Game game;
-    private @Getter LiveCinematics liveCinematics;
+    //private @Getter LiveCinematics liveCinematics;
     private @Getter PaperCommandManager commandManager;
     private @Getter static MiniMessage miniMessage = MiniMessage.get();
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -43,7 +43,7 @@ public class CinematicTool extends JavaPlugin {
         instance = this;
 
         game = new Game(this);
-        this.liveCinematics = new LiveCinematics(this);
+        //this.liveCinematics = new LiveCinematics(this);
 
         BukkitTCT.registerPlugin(this);
         this.npcPool = NPCPool.builder(this).build();
