@@ -38,6 +38,7 @@ public class NPCListener implements Listener {
             npcModifiers.add(npc.equipment().queue(EquipmentModifier.CHEST, itemStack));
         });
         npcModifiers.add(npc.metadata().queue(MetadataModifier.EntityMetadata.SKIN_LAYERS, npcInfo.isOverlay()));
+        npcModifiers.add(npc.rotation().queueRotate(npcInfo.getLocation().getYaw(), npcInfo.getLocation().getPitch()));
 
         event.send(npcModifiers.toArray(new NPCModifier[npcModifiers.size()]));
     }
