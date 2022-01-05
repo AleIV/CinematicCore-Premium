@@ -6,15 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import com.comphenix.protocol.wrappers.WrappedGameProfile;
-
 import com.github.juliarn.npc.NPC;
-import com.github.juliarn.npc.profile.Profile;
-import me.aleiv.cinematicCore.paper.objects.NPCInfo;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,10 +23,9 @@ import me.aleiv.cinematicCore.paper.listeners.RecordingListener;
 import me.aleiv.cinematicCore.paper.objects.Cinematic;
 import me.aleiv.cinematicCore.paper.objects.CinematicProgress;
 import me.aleiv.cinematicCore.paper.objects.Frame;
+import me.aleiv.cinematicCore.paper.objects.NPCInfo;
 import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

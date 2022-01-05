@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-import me.aleiv.cinematicCore.paper.listeners.NPCListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -17,13 +16,12 @@ import kr.entree.spigradle.annotations.SpigotPlugin;
 import lombok.Getter;
 import me.aleiv.cinematicCore.paper.commands.CinematicCMD;
 import me.aleiv.cinematicCore.paper.listeners.GlobalListener;
+import me.aleiv.cinematicCore.paper.listeners.NPCListener;
 import me.aleiv.cinematicCore.paper.objects.Cinematic;
 import me.aleiv.cinematicCore.paper.utilities.JsonConfig;
 import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-
-import java.util.stream.Collectors;
 
 
 @SpigotPlugin

@@ -1,13 +1,11 @@
 package me.aleiv.cinematicCore.paper.listeners;
 
-import me.aleiv.cinematicCore.paper.objects.NPCInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -17,6 +15,7 @@ import me.aleiv.cinematicCore.paper.events.CinematicFinishEvent;
 import me.aleiv.cinematicCore.paper.events.CinematicStartEvent;
 import me.aleiv.cinematicCore.paper.events.CinematicTickEvent;
 import me.aleiv.cinematicCore.paper.events.TaskChainTickEvent;
+import me.aleiv.cinematicCore.paper.objects.NPCInfo;
 import me.aleiv.cinematicCore.paper.objects.PlayerInfo;
 
 public class GlobalListener implements Listener {

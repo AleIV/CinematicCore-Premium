@@ -1,26 +1,18 @@
 package me.aleiv.cinematicCore.paper.objects;
 
-import com.comphenix.protocol.wrappers.EnumWrappers;
+import java.util.HashMap;
+import java.util.UUID;
+
 import com.github.juliarn.npc.NPC;
-import com.github.juliarn.npc.event.PlayerNPCShowEvent;
 import com.github.juliarn.npc.modifier.EquipmentModifier;
-import com.github.juliarn.npc.modifier.LabyModModifier;
-import com.github.juliarn.npc.modifier.MetadataModifier;
 import com.github.juliarn.npc.profile.Profile;
-import lombok.Data;
-import me.aleiv.cinematicCore.paper.CinematicTool;
-import org.bukkit.Bukkit;
+
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.UUID;
+import lombok.Data;
 
 @Data
 public class NPCInfo {
@@ -71,12 +63,6 @@ public class NPCInfo {
 
     public NPC.Builder createBuilder() {
         String teamName = "sc_npc_" + UUID.randomUUID().toString().substring(0, 8);
-        final MetadataModifier.EntityMetadata<Boolean, Byte> SKIN_LAYERS = new MetadataModifier.EntityMetadata<>(
-                10,
-                Byte.class,
-                Arrays.asList(9, 9, 10, 14, 14, 15, 17),
-                input -> (byte) (input ? 0xff : 0)
-        );
 
         return NPC.builder()
                 .location(this.location)
