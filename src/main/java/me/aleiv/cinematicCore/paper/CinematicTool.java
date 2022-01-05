@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-import me.aleiv.cinematicCore.paper.core.LiveCinematics;
 import me.aleiv.cinematicCore.paper.listeners.NPCListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
