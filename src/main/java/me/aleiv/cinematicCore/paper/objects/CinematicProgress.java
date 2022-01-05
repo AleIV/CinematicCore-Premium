@@ -21,7 +21,7 @@ public class CinematicProgress {
     BukkitTCT task;
 
     HashMap<UUID, PlayerInfo> playerInfo = new HashMap<>();
-    List<NPC> spawnedNpcs = new ArrayList<>();
+    HashMap<NPC, NPCInfo> spawnedNpcs = new HashMap<>();
 
     public CinematicProgress(List<Cinematic> scenes, List<UUID> uuids, BukkitTCT task, CinematicTool instance){
         this.scenes = scenes;

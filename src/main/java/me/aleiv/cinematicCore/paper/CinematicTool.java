@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import me.aleiv.cinematicCore.paper.listeners.NPCListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -22,12 +23,15 @@ import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
+import java.util.stream.Collectors;
+
 
 @SpigotPlugin
 public class CinematicTool extends JavaPlugin {
 
     private static @Getter CinematicTool instance;
     private @Getter Game game;
+    //private @Getter LiveCinematics liveCinematics;
     private @Getter PaperCommandManager commandManager;
     private @Getter static MiniMessage miniMessage = MiniMessage.get();
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -38,6 +42,7 @@ public class CinematicTool extends JavaPlugin {
         instance = this;
 
         game = new Game(this);
+        //this.liveCinematics = new LiveCinematics(this);
 
         BukkitTCT.registerPlugin(this);
         this.npcPool = NPCPool.builder(this).build();
@@ -45,6 +50,7 @@ public class CinematicTool extends JavaPlugin {
         //LISTENERS
 
         Bukkit.getPluginManager().registerEvents(new GlobalListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new NPCListener(this), this);
 
 
         //COMMANDS
@@ -78,7 +84,7 @@ public class CinematicTool extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
+        this.npcPool.getNPCs().stream().toList().forEach(npc -> this.npcPool.removeNPC(npc.getEntityId()));
     }
 
     public void pushJson(){
