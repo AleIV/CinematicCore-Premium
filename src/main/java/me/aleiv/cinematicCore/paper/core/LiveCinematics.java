@@ -52,7 +52,7 @@ public class LiveCinematics implements Listener {
             return;
         }
 
-        this.liveCinematics.values().stream().filter(i -> i.getPlayers().contains(player.getUniqueId())).findFirst().ifPresent(i -> e.setCancelled(true));
+        this.liveCinematics.values().stream().filter(i -> i.isPlayerInCinematic(player.getUniqueId())).findFirst().ifPresent(i -> e.setTo(i.getParentPlayer().getLocation()));
     }
 
     @EventHandler(priority = EventPriority.HIGH)

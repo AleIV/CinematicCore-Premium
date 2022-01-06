@@ -39,7 +39,7 @@ public class NPCInfo {
 
     public NPCInfo(Player player, boolean lookAtPlayer, boolean overlay, boolean hideNameTag) {
         this.profile = this.createProfile(player);
-        this.location = player.getLocation();
+        this.location = player.getLocation().clone();
         this.overlay = overlay;
         this.lookAtPlayer = lookAtPlayer;
         this.hideNameTag = hideNameTag;
