@@ -95,7 +95,7 @@ public class LiveCinematicInfo {
 
     public void stop() {
         this.running = false;
-        this.players.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).forEach(this::removePlayer);
+        this.players.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).toList().forEach(this::removePlayer);
         this.players.clear();
         this.npcs.stream().map(NPC::getEntityId).forEach(this.instance.getNpcPool()::removeNPC);
         this.npcs.clear();
