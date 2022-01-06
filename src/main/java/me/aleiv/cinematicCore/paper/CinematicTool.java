@@ -45,7 +45,7 @@ public class CinematicTool extends JavaPlugin {
         this.liveCinematics = new LiveCinematics(this);
 
         BukkitTCT.registerPlugin(this);
-        this.npcPool = NPCPool.builder(this).build();
+        this.npcPool = NPCPool.builder(this).spawnDistance(224).actionDistance(224).build();
 
         //LISTENERS
 
