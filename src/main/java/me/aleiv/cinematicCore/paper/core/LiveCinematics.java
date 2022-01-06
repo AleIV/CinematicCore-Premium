@@ -4,6 +4,7 @@ import me.aleiv.cinematicCore.paper.CinematicTool;
 import me.aleiv.cinematicCore.paper.objects.LiveCinematicInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -30,31 +31,14 @@ public class LiveCinematics implements Listener {
 
         Bukkit.getPluginManager().registerEvents(this, instance);
         Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> this.liveCinematics.values().stream().filter(info -> !info.isRunning()).forEach(i -> this.liveCinematics.remove(i.getParentUUID())), 0L, 5*10L);
-    }
 
-    @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerMove(PlayerMoveEvent e) {
-        if (!e.isCancelled() && e.getTo() != null) {
-            this.processMoveEvent(e);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerTeleport(PlayerTeleportEvent e) {
-        if (!e.isCancelled() && e.getTo() != null) {
-            this.processMoveEvent(e);
-        }
-    }
-
-    private void processMoveEvent(PlayerMoveEvent e) {
-        Player player = e.getPlayer();
-        LiveCinematicInfo info = this.liveCinematics.get(player.getUniqueId());
-        if (info != null && info.isRunning()) {
-            info.getPlayers().stream().map(Bukkit::getPlayer).filter(Objects::nonNull).forEach(p -> p.teleport(e.getTo()));
-            return;
-        }
-
-        this.liveCinematics.values().stream().filter(i -> i.isPlayerInCinematic(player.getUniqueId())).findFirst().ifPresent(i -> e.setTo(i.getParentPlayer().getLocation()));
+        // Teleport task
+        Bukkit.getScheduler().runTaskTimer(instance, () -> Bukkit.getOnlinePlayers().forEach(p -> {
+            LiveCinematicInfo info = this.getCinematicWherePlayerIsIn(p);
+            if (info != null) {
+                p.teleport(info.getParentPlayer().getLocation());
+            }
+        }), 0L, 1L);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -90,6 +74,10 @@ public class LiveCinematics implements Listener {
 
     public List<LiveCinematicInfo> getCinematics() {
         return new ArrayList<>(this.liveCinematics.values());
+    }
+
+    public LiveCinematicInfo getCinematicWherePlayerIsIn(Player player) {
+        return this.liveCinematics.values().stream().filter(i -> i.getPlayers().contains(player.getUniqueId())).findFirst().orElse(null);
     }
 
 }
