@@ -48,9 +48,9 @@ public class LiveCinematics implements Listener {
             pInfo.stop();
             return;
         }
-        LiveCinematicInfo info = this.getCinematicInfo(e.getPlayer());
+        LiveCinematicInfo info = this.getCinematicWherePlayerIsIn(e.getPlayer());
         if (info != null) {
-            info.removePlayer(e.getPlayer());
+            info.forceRemove(e.getPlayer());
         }
     }
 

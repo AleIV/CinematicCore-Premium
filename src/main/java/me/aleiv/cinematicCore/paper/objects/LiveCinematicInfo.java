@@ -8,13 +8,14 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class LiveCinematicInfo {
 
     private CinematicTool instance;
 
     private final UUID parentUUID;
+
+    private List<UUID> playersInTransit;
 
     private final List<UUID> players;
     private final HashMap<UUID, NPC> npcsHashMap;
@@ -27,6 +28,8 @@ public class LiveCinematicInfo {
     public LiveCinematicInfo(UUID parentUUID) {
         this.instance = CinematicTool.getInstance();
 
+        this.playersInTransit = new ArrayList<>();
+
         this.parentUUID = parentUUID;
         this.players = new ArrayList<>();
         this.npcsHashMap = new HashMap<>();
@@ -35,14 +38,27 @@ public class LiveCinematicInfo {
         this.gamemodesHashMap = new HashMap<>();
 
         this.running = true;
+
+        this.registerPlayer(this.getParentPlayer());
     }
 
     public void addPlayer(Player player) {
-        if (player.getUniqueId().equals(parentUUID) || this.players.contains(player.getUniqueId()) || this.instance.getLiveCinematics().isPlayerInCinematic(player.getUniqueId()))
+        if (!this.running || this.playersInTransit.contains(player.getUniqueId()) || player.getUniqueId().equals(parentUUID) || this.players.contains(player.getUniqueId()) || this.instance.getLiveCinematics().isPlayerInCinematic(player.getUniqueId()))
             return;
 
-        players.add(player.getUniqueId());
-        if (this.instance.getGame().getNpcs()) {
+        this.playersInTransit.add(player.getUniqueId());
+        this.instance.getGame().sendBlack(player);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this.instance, () -> {
+            this.playersInTransit.remove(player.getUniqueId());
+            players.add(player.getUniqueId());
+            this.registerPlayer(player);
+        }, 110L);
+    }
+
+    private void registerPlayer(Player player) {
+        if (!this.running) return;
+
+        if (this.instance.getGame().getNpcs() && (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE)) {
             NPCInfo npcInfo = new NPCInfo(player, false, true, false);
             NPC npc = npcInfo.createBuilder().build(this.instance.getNpcPool());
             this.npcsHashMap.put(player.getUniqueId(), npc);
@@ -58,6 +74,18 @@ public class LiveCinematicInfo {
     }
 
     public void removePlayer(Player player) {
+        if (!this.running || this.playersInTransit.contains(player.getUniqueId())) return;
+
+        this.playersInTransit.add(player.getUniqueId());
+        this.instance.getGame().sendBlack(player);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this.instance, () -> {
+            if (!this.playersInTransit.remove(player.getUniqueId())) return;
+            this.forceRemove(player);
+        }, 110L);
+    }
+
+    public void forceRemove(Player player) {
+        this.playersInTransit.remove(player.getUniqueId());
         players.remove(player.getUniqueId());
         NPC npc = npcsHashMap.remove(player.getUniqueId());
         if (npc != null) {
@@ -95,14 +123,21 @@ public class LiveCinematicInfo {
     }
 
     public void stop() {
+        if (!this.running) return;
         this.running = false;
-        this.players.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).toList().forEach(this::removePlayer);
-        this.players.clear();
-        this.npcsHashMap.values().stream().map(NPC::getEntityId).forEach(this.instance.getNpcPool()::removeNPC);
-        this.npcsHashMap.clear();
-        this.npcInfoHashMap.clear();
-        this.locationsHashMap.clear();
-        this.gamemodesHashMap.clear();
+
+        this.instance.getGame().sendBlack(this.players);
+        this.instance.getGame().sendBlack(List.of(this.parentUUID));
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this.instance, () -> {
+            forceRemove(this.getParentPlayer());
+            this.players.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).toList().forEach(this::forceRemove);
+            this.players.clear();
+            this.npcsHashMap.values().stream().map(NPC::getEntityId).forEach(this.instance.getNpcPool()::removeNPC);
+            this.npcsHashMap.clear();
+            this.npcInfoHashMap.clear();
+            this.locationsHashMap.clear();
+            this.gamemodesHashMap.clear();
+        }, 110L);
     }
 
     public boolean isRunning() {

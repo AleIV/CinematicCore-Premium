@@ -1,10 +1,7 @@
 package me.aleiv.cinematicCore.paper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import com.github.juliarn.npc.NPC;
 
@@ -87,7 +84,7 @@ public class Game {
         List<Integer> list = new ArrayList<>();
 
         if (fade) {
-            sendBlack();
+            sendBlack(uuids);
 
             task.addWithDelay(new BukkitRunnable() {
                 @Override
@@ -146,7 +143,7 @@ public class Game {
                 task2.addWithDelay(new BukkitRunnable() {
                     @Override
                     public void run() {
-                        sendBlack();
+                        sendBlack(uuids);
                     }
 
                 }, ((50 * integer) + 50 * 110) - (50 * 110));
@@ -215,11 +212,13 @@ public class Game {
                 .orElse(null);
     }
 
-    public void sendBlack() {
+    public void sendBlack(Player player) {
         String black = Character.toString('\u3400');
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            instance.showTitle(p, black, "", 100, 20, 100);
-        });
+        instance.showTitle(player, black, "", 100, 20, 100);
+    }
+
+    public void sendBlack(List<UUID> players) {
+        players.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).forEach(this::sendBlack);
     }
 
     public void hide(boolean bool) {
