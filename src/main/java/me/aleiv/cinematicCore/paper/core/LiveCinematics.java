@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -31,8 +32,19 @@ public class LiveCinematics implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerMove(PlayerMoveEvent e) {
-        if (e.isCancelled() || e.getTo() == null) return;
+        if (!e.isCancelled() && e.getTo() != null) {
+            this.processMoveEvent(e);
+        }
+    }
 
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerTeleport(PlayerTeleportEvent e) {
+        if (!e.isCancelled() && e.getTo() != null) {
+            this.processMoveEvent(e);
+        }
+    }
+
+    private void processMoveEvent(PlayerMoveEvent e) {
         Player player = e.getPlayer();
         LiveCinematicInfo info = this.liveCinematics.get(player.getUniqueId());
         if (info != null && info.isRunning()) {
