@@ -58,6 +58,10 @@ public class LiveCinematicCMD extends BaseCommand {
         Player target = this.getPlayer(playerName);
         if (target == null) return;
 
+        if (info.getParentUUID().equals(target.getUniqueId())) {
+            player.sendMessage("§cYou can't add yourself to a live cinematic!");
+            return;
+        }
         if (info.isPlayerInCinematic(target.getUniqueId())) {
             player.sendMessage("§cPlayer is already in the live cinematic!");
             return;
@@ -91,6 +95,10 @@ public class LiveCinematicCMD extends BaseCommand {
         Player target = this.getPlayer(playerName);
         if (target == null) return;
 
+        if (info.getParentUUID().equals(target.getUniqueId())) {
+            player.sendMessage("§cYou can't remove yourself from a live cinematic!");
+            return;
+        }
         if (!info.isPlayerInCinematic(target.getUniqueId())) {
             player.sendMessage("§cPlayer is not in the live cinematic!");
             return;

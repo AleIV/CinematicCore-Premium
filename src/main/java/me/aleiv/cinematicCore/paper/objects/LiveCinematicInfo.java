@@ -48,6 +48,12 @@ public class LiveCinematicInfo {
         this.npcsHashMap.put(player.getUniqueId(), npc);
         this.locationsHashMap.put(player.getUniqueId(), player.getLocation());
         this.gamemodesHashMap.put(player.getUniqueId(), player.getGameMode());
+        player.setGameMode(GameMode.SPECTATOR);
+
+        Player p = this.getParentPlayer();
+        if (p != null) {
+            player.teleport(p.getLocation());
+        }
     }
 
     public void removePlayer(Player player) {
@@ -100,5 +106,9 @@ public class LiveCinematicInfo {
 
     public boolean isRunning() {
         return running;
+    }
+
+    public Player getParentPlayer() {
+        return Bukkit.getPlayer(parentUUID);
     }
 }
