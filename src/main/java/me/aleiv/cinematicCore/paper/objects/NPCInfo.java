@@ -1,6 +1,7 @@
 package me.aleiv.cinematicCore.paper.objects;
 
 import java.util.HashMap;
+import java.util.Random;
 import java.util.UUID;
 
 import com.github.juliarn.npc.NPC;
@@ -54,8 +55,10 @@ public class NPCInfo {
     }
 
     private Profile createProfile(Player player) {
-        Profile profile = new Profile(player.getName());
+        Profile profile = new Profile(player.getUniqueId());
         profile.complete();
+
+        profile.setName(player.getName());
         profile.setUniqueId(UUID.randomUUID());
 
         return profile;
@@ -66,7 +69,6 @@ public class NPCInfo {
 
         return NPC.builder()
                 .location(this.location)
-                .usePlayerProfiles(true)
                 .profile(this.profile)
                 .lookAtPlayer(this.lookAtPlayer)
                 .imitatePlayer(false)

@@ -42,17 +42,19 @@ public class LiveCinematicInfo {
             return;
 
         players.add(player.getUniqueId());
-        NPCInfo npcInfo = new NPCInfo(player);
-        NPC npc = npcInfo.createBuilder().build(this.instance.getNpcPool());
-        this.npcs.add(npc);
-        this.npcsHashMap.put(player.getUniqueId(), npc);
         this.locationsHashMap.put(player.getUniqueId(), player.getLocation());
         this.gamemodesHashMap.put(player.getUniqueId(), player.getGameMode());
         player.setGameMode(GameMode.SPECTATOR);
-
         Player p = this.getParentPlayer();
         if (p != null) {
             player.teleport(p.getLocation());
+        }
+
+        if (this.instance.getGame().getNpcs()) {
+            NPCInfo npcInfo = new NPCInfo(player);
+            NPC npc = npcInfo.createBuilder().build(this.instance.getNpcPool());
+            this.npcs.add(npc);
+            this.npcsHashMap.put(player.getUniqueId(), npc);
         }
     }
 
