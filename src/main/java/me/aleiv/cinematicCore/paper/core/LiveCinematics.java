@@ -26,7 +26,7 @@ public class LiveCinematics implements Listener {
         this.liveCinematics = new ConcurrentHashMap<>();
 
         Bukkit.getPluginManager().registerEvents(this, instance);
-        Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> this.liveCinematics.values().stream().filter(LiveCinematicInfo::isRunning).forEach(i -> this.liveCinematics.remove(i.getParentUUID())), 0L, 5*10L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> this.liveCinematics.values().stream().filter(info -> !info.isRunning()).forEach(i -> this.liveCinematics.remove(i.getParentUUID())), 0L, 5*10L);
     }
 
     @EventHandler(priority = EventPriority.LOW)
