@@ -43,7 +43,15 @@ public class LiveCinematics implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerQuit(PlayerQuitEvent e) {
-        this.liveCinematics.values().stream().filter(i -> i.getPlayers().contains(e.getPlayer().getUniqueId())).findFirst().ifPresent(i -> i.removePlayer(e.getPlayer()));
+        if (this.liveCinematics.containsKey(e.getPlayer().getUniqueId())) {
+            LiveCinematicInfo pInfo = this.liveCinematics.get(e.getPlayer().getUniqueId());
+            pInfo.stop();
+            return;
+        }
+        LiveCinematicInfo info = this.getCinematicInfo(e.getPlayer());
+        if (info != null) {
+            info.removePlayer(e.getPlayer());
+        }
     }
 
     public boolean isPlayerInCinematic(UUID uuid) {
