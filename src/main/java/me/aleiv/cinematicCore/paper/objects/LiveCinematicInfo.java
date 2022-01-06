@@ -17,8 +17,8 @@ public class LiveCinematicInfo {
     private final UUID parentUUID;
 
     private final List<UUID> players;
-    private final List<NPC> npcs;
     private final HashMap<UUID, NPC> npcsHashMap;
+    private final HashMap<NPC, NPCInfo> npcInfoHashMap;
     private final HashMap<UUID, Location> locationsHashMap;
     private final HashMap<UUID, GameMode> gamemodesHashMap;
 
@@ -29,8 +29,8 @@ public class LiveCinematicInfo {
 
         this.parentUUID = parentUUID;
         this.players = new ArrayList<>();
-        this.npcs = new ArrayList<>();
         this.npcsHashMap = new HashMap<>();
+        this.npcInfoHashMap = new HashMap<>();
         this.locationsHashMap = new HashMap<>();
         this.gamemodesHashMap = new HashMap<>();
 
@@ -42,6 +42,12 @@ public class LiveCinematicInfo {
             return;
 
         players.add(player.getUniqueId());
+        if (this.instance.getGame().getNpcs()) {
+            NPCInfo npcInfo = new NPCInfo(player, false, true, false);
+            NPC npc = npcInfo.createBuilder().build(this.instance.getNpcPool());
+            this.npcsHashMap.put(player.getUniqueId(), npc);
+            this.npcInfoHashMap.put(npc, npcInfo);
+        }
         this.locationsHashMap.put(player.getUniqueId(), player.getLocation());
         this.gamemodesHashMap.put(player.getUniqueId(), player.getGameMode());
         player.setGameMode(GameMode.SPECTATOR);
@@ -49,20 +55,13 @@ public class LiveCinematicInfo {
         if (p != null) {
             player.teleport(p.getLocation());
         }
-
-        if (this.instance.getGame().getNpcs()) {
-            NPCInfo npcInfo = new NPCInfo(player);
-            NPC npc = npcInfo.createBuilder().build(this.instance.getNpcPool());
-            this.npcs.add(npc);
-            this.npcsHashMap.put(player.getUniqueId(), npc);
-        }
     }
 
     public void removePlayer(Player player) {
         players.remove(player.getUniqueId());
         NPC npc = npcsHashMap.remove(player.getUniqueId());
         if (npc != null) {
-            this.npcs.remove(npc);
+            npcInfoHashMap.remove(npc);
             this.instance.getNpcPool().removeNPC(npc.getEntityId());
         }
         Location loc = this.locationsHashMap.remove(player.getUniqueId());
@@ -87,8 +86,8 @@ public class LiveCinematicInfo {
         return new ArrayList<>(players);
     }
 
-    public List<NPC> getNpcs() {
-        return new ArrayList<>(npcs);
+    public NPCInfo getInfo(NPC npc) {
+        return npcInfoHashMap.get(npc);
     }
 
     public UUID getParentUUID() {
@@ -99,9 +98,9 @@ public class LiveCinematicInfo {
         this.running = false;
         this.players.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).toList().forEach(this::removePlayer);
         this.players.clear();
-        this.npcs.stream().map(NPC::getEntityId).forEach(this.instance.getNpcPool()::removeNPC);
-        this.npcs.clear();
+        this.npcsHashMap.values().stream().map(NPC::getEntityId).forEach(this.instance.getNpcPool()::removeNPC);
         this.npcsHashMap.clear();
+        this.npcInfoHashMap.clear();
         this.locationsHashMap.clear();
         this.gamemodesHashMap.clear();
     }

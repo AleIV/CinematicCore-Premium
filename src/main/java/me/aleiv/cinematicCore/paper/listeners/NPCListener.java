@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class NPCListener implements Listener {
 
@@ -26,9 +27,9 @@ public class NPCListener implements Listener {
     @EventHandler
     public void handleNPCShow(PlayerNPCShowEvent event) {
         NPC npc = event.getNPC();
-        NPCInfo npcInfo = instance.getGame().getCinematicProgressList().stream()
-                .map(c -> c.getSpawnedNpcs().get(npc))
-                .filter(Objects::nonNull).findFirst().orElse(null);
+        Stream<NPCInfo> npcInfoStream = Stream.concat(instance.getGame().getCinematicProgressList().parallelStream()
+                .map(c -> c.getSpawnedNpcs().get(npc)), instance.getLiveCinematics().getCinematics().parallelStream().map(c -> c.getInfo(npc)));
+        NPCInfo npcInfo = npcInfoStream.filter(Objects::nonNull).findFirst().orElse(null);
 
         if (npcInfo == null) return;
 

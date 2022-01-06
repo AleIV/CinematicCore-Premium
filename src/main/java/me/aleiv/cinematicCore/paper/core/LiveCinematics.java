@@ -12,6 +12,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -84,6 +86,10 @@ public class LiveCinematics implements Listener {
 
     public LiveCinematicInfo getCinematicInfo(Player parent) {
         return this.liveCinematics.get(parent.getUniqueId());
+    }
+
+    public List<LiveCinematicInfo> getCinematics() {
+        return new ArrayList<>(this.liveCinematics.values());
     }
 
 }
