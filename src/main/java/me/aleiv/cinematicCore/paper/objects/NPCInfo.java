@@ -1,7 +1,6 @@
 package me.aleiv.cinematicCore.paper.objects;
 
 import java.util.HashMap;
-import java.util.Random;
 import java.util.UUID;
 
 import com.github.juliarn.npc.NPC;
