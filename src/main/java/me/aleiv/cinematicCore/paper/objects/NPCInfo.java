@@ -8,6 +8,7 @@ import com.github.juliarn.npc.NPC;
 import com.github.juliarn.npc.modifier.EquipmentModifier;
 import com.github.juliarn.npc.profile.Profile;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -66,21 +67,15 @@ public class NPCInfo {
 
     public NPC.Builder createBuilder() {
         String teamName = "sc_npc_" + UUID.randomUUID().toString().substring(0, 8);
+        Team team = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(teamName);
+        team.addEntry(this.profile.getName());
+        team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
 
         return NPC.builder()
                 .location(this.location)
                 .profile(this.profile)
                 .lookAtPlayer(this.lookAtPlayer)
-                .imitatePlayer(false)
-                .spawnCustomizer((npc, p) -> {
-                    if (this.hideNameTag) {
-                        if (p.getScoreboard().getTeam(teamName) == null) {
-                            Team team = p.getScoreboard().registerNewTeam(teamName);
-                            team.addEntry(npc.getProfile().getName());
-                            team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
-                        }
-                    }
-                });
+                .imitatePlayer(false);
     }
 
 }
