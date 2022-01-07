@@ -1,20 +1,21 @@
 package me.aleiv.cinematicCore.paper.listeners;
 
-import com.github.juliarn.npc.NPC;
-import com.github.juliarn.npc.event.PlayerNPCShowEvent;
-import com.github.juliarn.npc.modifier.EquipmentModifier;
-import com.github.juliarn.npc.modifier.MetadataModifier;
-import com.github.juliarn.npc.modifier.NPCModifier;
-import me.aleiv.cinematicCore.paper.CinematicTool;
-import me.aleiv.cinematicCore.paper.objects.NPCInfo;
-import org.bukkit.Material;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
+
+import com.github.juliarn.npc.NPC;
+import com.github.juliarn.npc.event.PlayerNPCShowEvent;
+import com.github.juliarn.npc.modifier.MetadataModifier;
+import com.github.juliarn.npc.modifier.NPCModifier;
+
+import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+
+import me.aleiv.cinematicCore.paper.CinematicTool;
+import me.aleiv.cinematicCore.paper.objects.NPCInfo;
 
 public class NPCListener implements Listener {
 
