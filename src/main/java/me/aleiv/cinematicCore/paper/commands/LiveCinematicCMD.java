@@ -40,10 +40,10 @@ public class LiveCinematicCMD extends BaseCommand {
         return info;
     }
 
-    private Player getPlayer(String playerName) {
+    private Player getPlayer(Player sender, String playerName) {
         Player player = plugin.getServer().getPlayer(playerName);
         if (player == null) {
-            player.sendMessage("§cPlayer not found!");
+            sender.sendMessage("§cPlayer not found!");
             return null;
         }
         return player;
@@ -55,7 +55,7 @@ public class LiveCinematicCMD extends BaseCommand {
     public void addPlayer(Player player, String playerName) {
         LiveCinematicInfo info = this.getInfo(player);
         if (info == null) return;
-        Player target = this.getPlayer(playerName);
+        Player target = this.getPlayer(player, playerName);
         if (target == null) return;
 
         if (info.getParentUUID().equals(target.getUniqueId())) {
@@ -92,7 +92,7 @@ public class LiveCinematicCMD extends BaseCommand {
     public void removePlayer(Player player, String playerName) {
         LiveCinematicInfo info = this.getInfo(player);
         if (info == null) return;
-        Player target = this.getPlayer(playerName);
+        Player target = this.getPlayer(player, playerName);
         if (target == null) return;
 
         if (info.getParentUUID().equals(target.getUniqueId())) {
