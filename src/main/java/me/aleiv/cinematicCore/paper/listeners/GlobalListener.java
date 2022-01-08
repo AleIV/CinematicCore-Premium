@@ -161,7 +161,7 @@ public class GlobalListener implements Listener {
 
         if (game.getNpcs()) {
             var npcs = cinematic.getSpawnedNpcs();
-            npcs.forEach((npc, i) -> this.instance.getNpcPool().removeNPC(npc.getEntityId()));
+            npcs.forEach((npc, i) -> this.instance.getNpcManager().removeNPC(npc));
             npcs.clear();
         }
 

@@ -19,7 +19,6 @@ public class LiveCinematicInfo {
 
     private final List<UUID> players;
     private final HashMap<UUID, NPC> npcsHashMap;
-    private final HashMap<NPC, NPCInfo> npcInfoHashMap;
     private final HashMap<UUID, Location> locationsHashMap;
     private final HashMap<UUID, GameMode> gamemodesHashMap;
 
@@ -33,7 +32,6 @@ public class LiveCinematicInfo {
         this.parentUUID = parentUUID;
         this.players = new ArrayList<>();
         this.npcsHashMap = new HashMap<>();
-        this.npcInfoHashMap = new HashMap<>();
         this.locationsHashMap = new HashMap<>();
         this.gamemodesHashMap = new HashMap<>();
 
@@ -60,9 +58,8 @@ public class LiveCinematicInfo {
 
         if (this.instance.getGame().getNpcs() && (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE)) {
             NPCInfo npcInfo = new NPCInfo(player);
-            NPC npc = npcInfo.createBuilder().build(this.instance.getNpcPool());
+            NPC npc = this.instance.getNpcManager().spawnNPC(npcInfo);
             this.npcsHashMap.put(player.getUniqueId(), npc);
-            this.npcInfoHashMap.put(npc, npcInfo);
         }
         this.locationsHashMap.put(player.getUniqueId(), player.getLocation());
         this.gamemodesHashMap.put(player.getUniqueId(), player.getGameMode());
@@ -89,8 +86,7 @@ public class LiveCinematicInfo {
         players.remove(player.getUniqueId());
         NPC npc = npcsHashMap.remove(player.getUniqueId());
         if (npc != null) {
-            npcInfoHashMap.remove(npc);
-            this.instance.getNpcPool().removeNPC(npc.getEntityId());
+            this.instance.getNpcManager().removeNPC(npc);
         }
         Location loc = this.locationsHashMap.remove(player.getUniqueId());
         if (loc != null) {
@@ -114,10 +110,6 @@ public class LiveCinematicInfo {
         return new ArrayList<>(players);
     }
 
-    public NPCInfo getInfo(NPC npc) {
-        return npcInfoHashMap.get(npc);
-    }
-
     public UUID getParentUUID() {
         return parentUUID;
     }
@@ -132,9 +124,8 @@ public class LiveCinematicInfo {
             forceRemove(this.getParentPlayer());
             this.players.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).toList().forEach(this::forceRemove);
             this.players.clear();
-            this.npcsHashMap.values().stream().map(NPC::getEntityId).forEach(this.instance.getNpcPool()::removeNPC);
+            this.npcsHashMap.values().forEach(npc -> this.instance.getNpcManager().removeNPC(npc));
             this.npcsHashMap.clear();
-            this.npcInfoHashMap.clear();
             this.locationsHashMap.clear();
             this.gamemodesHashMap.clear();
         }, 110L);

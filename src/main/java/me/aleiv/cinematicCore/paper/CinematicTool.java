@@ -1,12 +1,12 @@
 package me.aleiv.cinematicCore.paper;
 
-import com.github.juliarn.npc.NPCPool;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import me.aleiv.cinematicCore.paper.commands.LiveCinematicCMD;
 import me.aleiv.cinematicCore.paper.core.LiveCinematics;
+import me.aleiv.cinematicCore.paper.core.NPCManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -18,7 +18,6 @@ import kr.entree.spigradle.annotations.SpigotPlugin;
 import lombok.Getter;
 import me.aleiv.cinematicCore.paper.commands.CinematicCMD;
 import me.aleiv.cinematicCore.paper.listeners.GlobalListener;
-import me.aleiv.cinematicCore.paper.listeners.NPCListener;
 import me.aleiv.cinematicCore.paper.objects.Cinematic;
 import me.aleiv.cinematicCore.paper.utilities.JsonConfig;
 import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
@@ -35,7 +34,7 @@ public class CinematicTool extends JavaPlugin {
     private @Getter PaperCommandManager commandManager;
     private @Getter static MiniMessage miniMessage = MiniMessage.get();
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private @Getter NPCPool npcPool;
+    private @Getter NPCManager npcManager;
 
     @Override
     public void onEnable() {
@@ -45,13 +44,11 @@ public class CinematicTool extends JavaPlugin {
         this.liveCinematics = new LiveCinematics(this);
 
         BukkitTCT.registerPlugin(this);
-        this.npcPool = NPCPool.builder(this).spawnDistance(224).actionDistance(224).build();
+        this.npcManager = new NPCManager(this);
 
         //LISTENERS
 
         Bukkit.getPluginManager().registerEvents(new GlobalListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new NPCListener(this), this);
-
 
         //COMMANDS
         
@@ -85,7 +82,7 @@ public class CinematicTool extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        this.npcPool.getNPCs().stream().toList().forEach(npc -> this.npcPool.removeNPC(npc.getEntityId()));
+
     }
 
     public void pushJson(){

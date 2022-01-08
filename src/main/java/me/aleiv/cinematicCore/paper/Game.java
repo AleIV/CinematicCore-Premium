@@ -172,7 +172,7 @@ public class Game {
     }
 
     public void spawnClone(NPCInfo npcInfo, CinematicProgress cinematic) {
-        NPC npc = npcInfo.createBuilder().build(this.instance.getNpcPool());
+        NPC npc = this.instance.getNpcManager().spawnNPC(npcInfo);
         cinematic.getSpawnedNpcs().put(npc, npcInfo);
     }
 
