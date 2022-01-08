@@ -81,4 +81,17 @@ jar {
     classifier = "original";
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from project.shadow.component(it)
+
+            artifactId 'CinematicTool'
+            version version
+
+            artifact jar
+        }
+    }
+}
+
 tasks.build.dependsOn tasks.shadowJar
