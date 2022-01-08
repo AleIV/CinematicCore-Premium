@@ -7,6 +7,7 @@ import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import me.aleiv.cinematicCore.paper.CinematicTool;
 import me.aleiv.cinematicCore.paper.objects.LiveCinematicInfo;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -77,7 +78,7 @@ public class LiveCinematicCMD extends BaseCommand {
         LiveCinematicInfo info = this.getInfo(player);
         if (info == null) return;
 
-        List<Player> players = player.getNearbyEntities(radius, radius, radius).stream().filter(entity -> entity instanceof Player).map(entity -> (Player) entity).toList();
+        List<Player> players = player.getNearbyEntities(radius, radius, radius).stream().filter(entity -> entity instanceof Player).map(entity -> (Player) entity).filter(p -> p.getGameMode() != GameMode.SPECTATOR).toList();
         if (players.isEmpty()) {
             player.sendMessage("§cNo players found in range.");
             return;
