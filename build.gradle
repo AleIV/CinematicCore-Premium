@@ -69,11 +69,16 @@ spigot {
 }
 
 shadowJar {
+    classifier = "";
     relocate 'co.aikar.commands', 'shadded.acf'
     relocate 'co.aikar.locales', 'shadded.acf.locales'
     relocate 'us.jcedeno.libs.rapidinv', 'shaded.me.aleiv.rapidinv'
     relocate 'io.github.znetworkw.znpcservers', 'shadded.aleiv.io.github.znetworkw.znpcservers' 
     minimize();
+}
+
+jar {
+    classifier = "original";
 }
 
 tasks.build.dependsOn tasks.shadowJar
