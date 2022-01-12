@@ -3,12 +3,15 @@ package me.aleiv.cinematicCore.paper.commands;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import com.google.common.collect.ImmutableList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -209,7 +212,6 @@ public class CinematicCMD extends BaseCommand {
     @Subcommand("play")
     @CommandCompletion("@bool @scenes")
     public void play(CommandSender sender, Boolean bool, String... cinematic) {
-
         var game = instance.getGame();
         var cinematics = game.getCinematics();
         var allExist = true;
@@ -241,6 +243,31 @@ public class CinematicCMD extends BaseCommand {
             game.play(uuids, cinematic);
         }
 
+    }
+
+    @Subcommand("play-range")
+    @CommandCompletion("@nothing @scenes")
+    public void play(Player sender, Integer range, String... cinematic) {
+        var game = instance.getGame();
+        var cinematics = game.getCinematics();
+        var allExist = true;
+
+        for (var name : cinematic) {
+            if (!cinematics.containsKey(name)) {
+                allExist = false;
+            }
+        }
+
+        if (allExist) {
+            sender.sendMessage(ChatColor.RED + "Cinematic doesn't exist.");
+            return;
+        }
+
+        List<UUID> players = sender.getNearbyEntities(range, range, range).stream()
+                .filter(e -> e.getType() == EntityType.PLAYER)
+                .map(Entity::getUniqueId).toList();
+
+        game.play(players, cinematic);
     }
 
     @Subcommand("push")
