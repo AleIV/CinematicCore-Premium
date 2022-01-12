@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import lombok.Data;
@@ -23,6 +24,7 @@ public class NPCInfo {
     private boolean overlay;
     private boolean lookAtPlayer;
     private boolean hideNameTag;
+    private String teamName;
 
     private HashMap<Integer, ItemStack> items;
 
@@ -65,10 +67,13 @@ public class NPCInfo {
     }
 
     public NPC.Builder createBuilder() {
-        String teamName = "sc_npc_" + UUID.randomUUID().toString().substring(0, 8);
-        Team team = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(teamName);
-        team.addEntry(this.profile.getName());
-        team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
+        this.teamName = "sc_npc_" + UUID.randomUUID().toString().substring(0, 8);
+        Scoreboard sc = Bukkit.getScoreboardManager() == null ? null : Bukkit.getScoreboardManager().getMainScoreboard();
+        if (sc != null && this.hideNameTag) {
+            Team team = sc.registerNewTeam(teamName);
+            team.addEntry(this.profile.getName());
+            team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
+        }
 
         return NPC.builder()
                 .location(this.location)

@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +39,14 @@ public class NPCManager implements Listener {
     }
 
     public void removeNPC(NPC npc) {
+        try {
+            Scoreboard sc = Bukkit.getScoreboardManager().getMainScoreboard();
+            NPCInfo npcInfo = this.npcs.get(npc);
+            sc.getTeam(npcInfo.getTeamName()).unregister();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         this.npcPool.removeNPC(npc.getEntityId());
         this.npcs.remove(npc);
     }
@@ -67,6 +76,12 @@ public class NPCManager implements Listener {
     @EventHandler
     public void onDisable(PluginDisableEvent e) {
         this.npcs.keySet().forEach(this::removeNPC);
+        Scoreboard scoreboard = Bukkit.getScoreboardManager() == null ? null : Bukkit.getScoreboardManager().getMainScoreboard();
+        new ArrayList<>(scoreboard.getTeams()).forEach(team -> {
+            if (team.getName().startsWith("sc_npc_")) {
+                team.unregister();
+            }
+        });
     }
 
 }
