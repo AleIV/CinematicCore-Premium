@@ -85,6 +85,9 @@ public class LiveCinematicCMD extends BaseCommand {
         }
         players.forEach(info::addPlayer);
         player.sendMessage("§3Added players in range to live cinematic.");
+        StringBuilder builder = new StringBuilder();
+        players.forEach(p -> builder.append("§f").append(p.getName()).append("§3, "));
+        player.sendMessage("§3Players: " + builder.toString().substring(0, builder.length() - 2));
     }
 
     @Subcommand("remove")
