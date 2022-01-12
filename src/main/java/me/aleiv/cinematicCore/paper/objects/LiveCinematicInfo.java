@@ -57,7 +57,7 @@ public class LiveCinematicInfo {
         if (!this.running) return;
 
         if (this.instance.getGame().getNpcs() && (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE)) {
-            NPCInfo npcInfo = new NPCInfo(player);
+            NPCInfo npcInfo = new NPCInfo(player, false, true, false);
             NPC npc = this.instance.getNpcManager().spawnNPC(npcInfo);
             this.npcsHashMap.put(player.getUniqueId(), npc);
         }
