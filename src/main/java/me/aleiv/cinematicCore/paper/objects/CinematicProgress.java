@@ -1,16 +1,14 @@
 package me.aleiv.cinematicCore.paper.objects;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
 import com.github.juliarn.npc.NPC;
-
-import org.bukkit.Bukkit;
-
 import lombok.Data;
 import me.aleiv.cinematicCore.paper.CinematicTool;
 import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
+import org.bukkit.Bukkit;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 @Data
 public class CinematicProgress {

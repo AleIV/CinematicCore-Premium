@@ -1,9 +1,8 @@
 package me.aleiv.cinematicCore.paper.events;
 
+import lombok.Getter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-
-import lombok.Getter;
 
 public class GameTickEvent extends Event {
     

@@ -1,12 +1,14 @@
 package me.aleiv.cinematicCore.paper.commands;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.*;
 import com.google.common.collect.ImmutableList;
-
+import lombok.NonNull;
+import me.aleiv.cinematicCore.paper.CinematicTool;
+import me.aleiv.cinematicCore.paper.objects.Cinematic;
+import me.aleiv.cinematicCore.paper.objects.Frame;
+import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -15,18 +17,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandCompletion;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Subcommand;
-import lombok.NonNull;
-import me.aleiv.cinematicCore.paper.CinematicTool;
-import me.aleiv.cinematicCore.paper.objects.Cinematic;
-import me.aleiv.cinematicCore.paper.objects.Frame;
-import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
-import net.md_5.bungee.api.ChatColor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 @CommandAlias("cinematic|c")
 @CommandPermission("cinematic.cmd")

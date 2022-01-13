@@ -1,12 +1,9 @@
 package me.aleiv.cinematicCore.paper.objects;
 
-import java.util.HashMap;
-import java.util.UUID;
-
 import com.github.juliarn.npc.NPC;
 import com.github.juliarn.npc.modifier.EquipmentModifier;
 import com.github.juliarn.npc.profile.Profile;
-
+import lombok.Data;
 import me.aleiv.cinematicCore.paper.utilities.LocationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,7 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import lombok.Data;
+import java.util.HashMap;
+import java.util.UUID;
 
 @Data
 public class NPCInfo {

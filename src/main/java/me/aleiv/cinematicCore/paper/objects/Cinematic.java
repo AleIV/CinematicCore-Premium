@@ -1,10 +1,10 @@
 package me.aleiv.cinematicCore.paper.objects;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import lombok.Data;
 
 @Data
 public class Cinematic {

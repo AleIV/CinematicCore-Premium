@@ -1,12 +1,11 @@
 package me.aleiv.cinematicCore.paper.objects;
 
-import java.util.UUID;
-
+import lombok.Data;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import lombok.Data;
+import java.util.UUID;
 
 @Data
 public class PlayerInfo {

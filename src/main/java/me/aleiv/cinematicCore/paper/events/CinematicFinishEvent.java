@@ -1,10 +1,9 @@
 package me.aleiv.cinematicCore.paper.events;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-
 import lombok.Getter;
 import me.aleiv.cinematicCore.paper.objects.CinematicProgress;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 public class CinematicFinishEvent extends Event {
     

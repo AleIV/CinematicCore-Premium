@@ -1,21 +1,6 @@
 package me.aleiv.cinematicCore.paper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-
 import com.github.juliarn.npc.NPC;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import me.aleiv.cinematicCore.paper.events.CinematicFinishEvent;
@@ -27,6 +12,14 @@ import me.aleiv.cinematicCore.paper.objects.Frame;
 import me.aleiv.cinematicCore.paper.objects.NPCInfo;
 import me.aleiv.cinematicCore.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
+
+import java.util.*;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
