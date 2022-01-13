@@ -40,17 +40,22 @@ public class LiveCinematicInfo {
         this.registerPlayer(this.getParentPlayer());
     }
 
-    public void addPlayer(Player player) {
+    public void addPlayer(Player player, boolean force) {
         if (!this.running || this.playersInTransit.contains(player.getUniqueId()) || player.getUniqueId().equals(parentUUID) || this.players.contains(player.getUniqueId()) || this.instance.getLiveCinematics().isPlayerInCinematic(player.getUniqueId()))
             return;
 
-        this.playersInTransit.add(player.getUniqueId());
-        this.instance.getGame().sendBlack(player);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this.instance, () -> {
-            this.playersInTransit.remove(player.getUniqueId());
+        if (!force) {
+            this.playersInTransit.add(player.getUniqueId());
+            this.instance.getGame().sendBlack(player);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(this.instance, () -> {
+                this.playersInTransit.remove(player.getUniqueId());
+                players.add(player.getUniqueId());
+                this.registerPlayer(player);
+            }, 110L);
+        } else {
             players.add(player.getUniqueId());
             this.registerPlayer(player);
-        }, 110L);
+        }
     }
 
     private void registerPlayer(Player player) {

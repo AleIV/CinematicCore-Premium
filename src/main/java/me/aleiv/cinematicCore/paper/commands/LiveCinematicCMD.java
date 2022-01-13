@@ -1,10 +1,7 @@
 package me.aleiv.cinematicCore.paper.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandCompletion;
-import co.aikar.commands.annotation.Subcommand;
-import co.aikar.commands.annotation.Syntax;
+import co.aikar.commands.annotation.*;
 import me.aleiv.cinematicCore.paper.CinematicTool;
 import me.aleiv.cinematicCore.paper.objects.LiveCinematicInfo;
 import org.bukkit.GameMode;
@@ -51,9 +48,9 @@ public class LiveCinematicCMD extends BaseCommand {
     }
 
     @Subcommand("add-player|add")
-    @CommandCompletion("@players")
-    @Syntax("<player>")
-    public void addPlayer(Player player, String playerName) {
+    @CommandCompletion("@players @bool")
+    @Syntax("<player> [force]")
+    public void addPlayer(Player player, String playerName, @Optional @Default("false") Boolean force) {
         LiveCinematicInfo info = this.getInfo(player);
         if (info == null) return;
         Player target = this.getPlayer(player, playerName);
@@ -67,14 +64,14 @@ public class LiveCinematicCMD extends BaseCommand {
             player.sendMessage("§cPlayer is already in the live cinematic!");
             return;
         }
-        info.addPlayer(target);
+        info.addPlayer(target, force);
         player.sendMessage("§3Player §e" + target.getName() + " §3added to live cinematic!");
     }
 
     @Subcommand("add-range")
-    @CommandCompletion("@nothing")
-    @Syntax("<radius>")
-    public void addRange(Player player, int radius) {
+    @CommandCompletion("@nothing @bool")
+    @Syntax("<radius> [force]")
+    public void addRange(Player player, int radius, @Optional @Default("false") Boolean force) {
         LiveCinematicInfo info = this.getInfo(player);
         if (info == null) return;
 
@@ -83,7 +80,7 @@ public class LiveCinematicCMD extends BaseCommand {
             player.sendMessage("§cNo players found in range.");
             return;
         }
-        players.forEach(info::addPlayer);
+        players.forEach(p -> info.addPlayer(p, force));
         player.sendMessage("§3Added players in range to live cinematic.");
         StringBuilder builder = new StringBuilder();
         players.forEach(p -> builder.append("§f").append(p.getName()).append("§3, "));
