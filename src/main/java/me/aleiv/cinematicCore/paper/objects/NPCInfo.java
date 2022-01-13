@@ -7,6 +7,7 @@ import com.github.juliarn.npc.NPC;
 import com.github.juliarn.npc.modifier.EquipmentModifier;
 import com.github.juliarn.npc.profile.Profile;
 
+import me.aleiv.cinematicCore.paper.utilities.LocationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -42,7 +43,7 @@ public class NPCInfo {
 
     public NPCInfo(Player player, boolean lookAtPlayer, boolean overlay, boolean hideNameTag) {
         this.profile = this.createProfile(player);
-        this.location = player.getLocation().clone();
+        this.location = LocationUtils.getSafeLocation(player.getLocation().clone());
         this.overlay = overlay;
         this.lookAtPlayer = lookAtPlayer;
         this.hideNameTag = hideNameTag;
