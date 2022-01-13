@@ -1,13 +1,19 @@
 package me.aleiv.cinematicCore.paper.objects;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
 import com.github.juliarn.npc.NPC;
-import me.aleiv.cinematicCore.paper.CinematicTool;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import me.aleiv.cinematicCore.paper.CinematicTool;
 
 public class LiveCinematicInfo {
 
