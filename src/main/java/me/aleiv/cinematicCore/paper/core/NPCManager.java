@@ -125,4 +125,8 @@ public class NPCManager implements Listener {
         });
     }
 
+    public List<NPCInfo> getNPCs() {
+        return new ArrayList<>(this.npcs.values());
+    }
+
 }
