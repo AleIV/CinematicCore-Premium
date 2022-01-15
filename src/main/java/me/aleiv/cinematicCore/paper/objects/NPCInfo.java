@@ -1,31 +1,31 @@
 package me.aleiv.cinematicCore.paper.objects;
 
 import com.github.juliarn.npc.NPC;
-import com.github.juliarn.npc.modifier.EquipmentModifier;
 import com.github.juliarn.npc.profile.Profile;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import me.aleiv.cinematicCore.paper.files.BasicLocation;
 import me.aleiv.cinematicCore.paper.utilities.LocationUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.HashMap;
 import java.util.UUID;
 
-@Data
 public class NPCInfo {
 
-    private Profile profile;
-    private Location location;
-    private boolean overlay;
-    private boolean lookAtPlayer;
-    private boolean hideNameTag;
-    private String teamName;
+    @Getter private final UUID uuid;
 
-    private HashMap<Integer, ItemStack> items;
+    private Profile profile;
+    private BasicLocation location;
+    @Getter private boolean overlay;
+    @Getter private boolean lookAtPlayer;
+    @Getter private boolean hideNameTag;
+    @Getter private String teamName;
+
+    private NPCItems npcItems;
+    @Getter @Setter private boolean cache;
 
     public NPCInfo(Player player) {
         this(player, false, true, true);
@@ -40,19 +40,33 @@ public class NPCInfo {
     }
 
     public NPCInfo(Player player, boolean lookAtPlayer, boolean overlay, boolean hideNameTag) {
+        this.uuid = UUID.randomUUID();
         this.profile = this.createProfile(player);
-        this.location = LocationUtils.getSafeLocation(player.getLocation().clone());
+        this.location = new BasicLocation(LocationUtils.getSafeLocation(player.getLocation().clone()));
         this.overlay = overlay;
         this.lookAtPlayer = lookAtPlayer;
         this.hideNameTag = hideNameTag;
 
-        this.items = new HashMap<>();
-        this.items.put(EquipmentModifier.HEAD, player.getInventory().getHelmet());
-        this.items.put(EquipmentModifier.CHEST, player.getInventory().getChestplate());
-        this.items.put(EquipmentModifier.LEGS, player.getInventory().getLeggings());
-        this.items.put(EquipmentModifier.FEET, player.getInventory().getBoots());
-        this.items.put(EquipmentModifier.OFFHAND, player.getInventory().getItemInOffHand());
-        this.items.put(EquipmentModifier.MAINHAND, player.getInventory().getItemInMainHand());
+        this.npcItems = new NPCItems(player);
+    }
+
+    public NPCInfo(Profile profile, BasicLocation location, boolean lookAtPlayer, boolean overlay, boolean hideNameTag) {
+        this(profile, location, new NPCItems(), lookAtPlayer, overlay, hideNameTag);
+    }
+
+    public NPCInfo(Profile profile, BasicLocation location, NPCItems items, boolean lookAtPlayer, boolean overlay, boolean hideNameTag) {
+        this(UUID.randomUUID(), profile, location, items, lookAtPlayer, overlay, hideNameTag);
+    }
+
+    public NPCInfo(UUID uuid, Profile profile, BasicLocation location, NPCItems items, boolean lookAtPlayer, boolean overlay, boolean hideNameTag) {
+        this.uuid = uuid;
+        this.profile = profile;
+        this.location = location;
+        this.overlay = overlay;
+        this.lookAtPlayer = lookAtPlayer;
+        this.hideNameTag = hideNameTag;
+
+        this.npcItems = items;
     }
 
     private Profile createProfile(Player player) {
@@ -75,10 +89,22 @@ public class NPCInfo {
         }
 
         return NPC.builder()
-                .location(this.location)
+                .location(this.location.getLocation())
                 .profile(this.profile)
                 .lookAtPlayer(this.lookAtPlayer)
                 .imitatePlayer(false);
+    }
+
+    public Profile getProfile() {
+        return profile.clone();
+    }
+
+    public BasicLocation getLocation() {
+        return location.clone();
+    }
+
+    public NPCItems getNPCItems() {
+        return npcItems.clone();
     }
 
 }
