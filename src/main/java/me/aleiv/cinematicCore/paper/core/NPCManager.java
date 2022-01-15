@@ -84,7 +84,25 @@ public class NPCManager implements Listener {
 
         this.npcPool.removeNPC(npc.getEntityId());
         this.npcs.remove(npc);
+    }
 
+    public void removeNPC(NPCInfo npcInfo) {
+        try {
+            Scoreboard sc = Bukkit.getScoreboardManager().getMainScoreboard();
+            sc.getTeam(npcInfo.getTeamName()).unregister();
+
+            this.npcsByUUID.remove(npcInfo.getUuid());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // reverse lookup for npc
+        for (Map.Entry<NPC, NPCInfo> entry : this.npcs.entrySet()) {
+            if (entry.getValue().equals(npcInfo)) {
+                this.npcPool.removeNPC(entry.getKey().getEntityId());
+                this.npcs.remove(entry.getKey());
+            }
+        }
     }
 
     public NPCInfo getNPCInfo(NPC npc) {
