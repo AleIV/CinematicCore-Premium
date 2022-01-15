@@ -10,7 +10,12 @@ public class LocationUtils {
         for (int i = 0; i < 256; i++) {
             loc.add(0, -1, 0);
             if (loc.getBlock().getType().isSolid()) {
-                return loc.add(0, 1, 0);
+                loc.add(0, 1, 0);
+                loc.setY(loc.getBlockY());
+                if (loc.getBlock().getType().toString().contains("SLAB") || loc.getBlock().getType().toString().contains("STAIRS")) {
+                    loc.add(0, 0.5, 0);
+                }
+                return loc;
             }
         }
 
