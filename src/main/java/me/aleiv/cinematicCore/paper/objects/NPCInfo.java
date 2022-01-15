@@ -25,7 +25,7 @@ public class NPCInfo {
     @Getter private String teamName;
 
     private NPCItems npcItems;
-    @Getter @Setter private boolean cache;
+    @Getter @Setter private boolean cache = false;
 
     public NPCInfo(Player player) {
         this(player, false, true, true);
