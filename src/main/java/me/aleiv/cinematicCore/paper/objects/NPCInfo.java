@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.aleiv.cinematicCore.paper.files.BasicLocation;
 import me.aleiv.cinematicCore.paper.utilities.LocationUtils;
+import me.aleiv.cinematicCore.paper.utilities.ScoreboardUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
@@ -48,6 +49,7 @@ public class NPCInfo {
         this.hideNameTag = hideNameTag;
 
         this.npcItems = new NPCItems(player);
+        this.createTeamName();
     }
 
     public NPCInfo(Profile profile, BasicLocation location, boolean lookAtPlayer, boolean overlay, boolean hideNameTag) {
@@ -67,6 +69,7 @@ public class NPCInfo {
         this.hideNameTag = hideNameTag;
 
         this.npcItems = items;
+        this.createTeamName();
     }
 
     private Profile createProfile(Player player) {
@@ -80,13 +83,8 @@ public class NPCInfo {
     }
 
     public NPC.Builder createBuilder() {
-        this.teamName = "sc_npc_" + UUID.randomUUID().toString().substring(0, 8);
-        Scoreboard sc = Bukkit.getScoreboardManager() == null ? null : Bukkit.getScoreboardManager().getMainScoreboard();
-        if (sc != null && this.hideNameTag) {
-            Team team = sc.registerNewTeam(teamName);
-            team.addEntry(this.profile.getName());
-            team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
-        }
+        if (this.hideNameTag)
+            ScoreboardUtils.createNametagTeam(this.profile.getName(), this.teamName);
 
         return NPC.builder()
                 .location(this.location.getLocation())
@@ -105,6 +103,10 @@ public class NPCInfo {
 
     public NPCItems getNPCItems() {
         return npcItems.clone();
+    }
+
+    private void createTeamName() {
+        this.teamName = "sc_npc_" + UUID.randomUUID().toString().substring(0, 8);
     }
 
 }

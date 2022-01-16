@@ -8,6 +8,7 @@ import com.github.juliarn.npc.modifier.NPCModifier;
 import me.aleiv.cinematicCore.paper.CinematicTool;
 import me.aleiv.cinematicCore.paper.files.DataFile;
 import me.aleiv.cinematicCore.paper.objects.NPCInfo;
+import me.aleiv.cinematicCore.paper.utilities.ScoreboardUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -72,35 +73,23 @@ public class NPCManager implements Listener {
     }
 
     public void removeNPC(NPC npc) {
-        try {
-            Scoreboard sc = Bukkit.getScoreboardManager().getMainScoreboard();
-            NPCInfo npcInfo = this.npcs.get(npc);
-            sc.getTeam(npcInfo.getTeamName()).unregister();
+        NPCInfo npcInfo = this.npcs.get(npc);
+        ScoreboardUtils.removeNametagTeam(npcInfo.getTeamName());
 
-            this.npcsByUUID.remove(npcInfo.getUuid());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        this.npcsByUUID.remove(npcInfo.getUuid());
         this.npcPool.removeNPC(npc.getEntityId());
         this.npcs.remove(npc);
     }
 
     public void removeNPC(NPCInfo npcInfo) {
-        try {
-            Scoreboard sc = Bukkit.getScoreboardManager().getMainScoreboard();
-            sc.getTeam(npcInfo.getTeamName()).unregister();
-
-            this.npcsByUUID.remove(npcInfo.getUuid());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ScoreboardUtils.removeNametagTeam(npcInfo.getTeamName());
 
         // reverse lookup for npc
         for (Map.Entry<NPC, NPCInfo> entry : this.npcs.entrySet()) {
             if (entry.getValue().equals(npcInfo)) {
                 this.npcPool.removeNPC(entry.getKey().getEntityId());
                 this.npcs.remove(entry.getKey());
+                this.npcsByUUID.remove(npcInfo.getUuid());
             }
         }
     }
@@ -135,12 +124,7 @@ public class NPCManager implements Listener {
     public void onDisable(PluginDisableEvent e) {
         this.saveNPCs();
         new ArrayList<>(this.npcs.keySet()).forEach(this::removeNPC);
-        Scoreboard scoreboard = Bukkit.getScoreboardManager() == null ? null : Bukkit.getScoreboardManager().getMainScoreboard();
-        new ArrayList<>(scoreboard.getTeams()).forEach(team -> {
-            if (team.getName().startsWith("sc_npc_")) {
-                team.unregister();
-            }
-        });
+        ScoreboardUtils.removeAllTeams();
     }
 
     public List<NPCInfo> getNPCs() {
