@@ -107,7 +107,7 @@ public class NPCManager implements Listener {
         ScoreboardUtils.removeNametagTeam(npcInfo.getTeamName());
 
         // reverse lookup for npc
-        for (Map.Entry<NPC, NPCInfo> entry : this.npcs.entrySet()) {
+        for (Map.Entry<NPC, NPCInfo> entry : new HashMap<>(this.npcs).entrySet()) {
             if (entry.getValue().equals(npcInfo)) {
                 this.npcPool.removeNPC(entry.getKey().getEntityId());
                 this.npcs.remove(entry.getKey());
