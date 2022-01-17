@@ -2,7 +2,6 @@ package me.aleiv.cinematicCore.paper.files;
 
 import com.github.juliarn.npc.modifier.EquipmentModifier;
 import com.github.juliarn.npc.profile.Profile;
-import me.aleiv.cinematicCore.paper.CinematicTool;
 import me.aleiv.cinematicCore.paper.objects.NPCInfo;
 import me.aleiv.cinematicCore.paper.objects.NPCItems;
 import me.aleiv.cinematicCore.paper.utilities.ItemStackUtils;

@@ -1,7 +1,6 @@
 package me.aleiv.cinematicCore.paper.utilities;
 
 import me.aleiv.cinematicCore.paper.CinematicTool;
-import me.aleiv.cinematicCore.paper.objects.NPCInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
