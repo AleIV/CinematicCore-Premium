@@ -11,11 +11,14 @@ import me.aleiv.cinematicCore.paper.objects.NPCInfo;
 import me.aleiv.cinematicCore.paper.utilities.ScoreboardUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.util.*;
 
@@ -27,6 +30,7 @@ public class NPCManager implements Listener {
 
     private HashMap<NPC, NPCInfo> npcs;
     private HashMap<UUID, NPCInfo> npcsByUUID;
+    private HashMap<UUID, Team> teams;
 
     public NPCManager(JavaPlugin plugin) {
         this.npcPool = NPCPool.builder(plugin).spawnDistance(224).actionDistance(224).build();
@@ -35,6 +39,7 @@ public class NPCManager implements Listener {
 
         this.npcs = new HashMap<>();
         this.npcsByUUID = new HashMap<>();
+        this.teams = new HashMap<>();
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
 
@@ -69,12 +74,31 @@ public class NPCManager implements Listener {
         NPC npc = info.createBuilder().build(this.npcPool);
         this.npcs.put(npc, info);
         this.npcsByUUID.put(info.getUuid(), info);
+
+        if (info.isHideNameTag()) {
+            Player player = Bukkit.getPlayer(info.getProfile().getName());
+            if (player != null) {
+                this.teams.put(player.getUniqueId(), ScoreboardUtils.getPlayerTeam(player));
+            }
+            ScoreboardUtils.createNametagTeam(info.getProfile().getName(), info.getTeamName());
+        }
+
         return npc;
     }
 
     public void removeNPC(NPC npc) {
         NPCInfo npcInfo = this.npcs.get(npc);
         ScoreboardUtils.removeNametagTeam(npcInfo.getTeamName());
+
+        if (npcInfo.isHideNameTag()) {
+            Player player = Bukkit.getPlayer(npcInfo.getProfile().getName());
+            if (player != null) {
+                Team team = this.teams.remove(player.getUniqueId());
+                if (team != null) {
+                    ScoreboardUtils.changePlayerTeam(player, team);
+                }
+            }
+        }
 
         this.npcsByUUID.remove(npcInfo.getUuid());
         this.npcPool.removeNPC(npc.getEntityId());
@@ -125,6 +149,21 @@ public class NPCManager implements Listener {
         this.saveNPCs();
         new ArrayList<>(this.npcs.keySet()).forEach(this::removeNPC);
         ScoreboardUtils.removeAllTeams();
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        Player player = e.getPlayer();
+
+        this.npcsByUUID.values().forEach(info -> {
+            if (info.getProfile().getName().equalsIgnoreCase(player.getName()) && info.isHideNameTag()) {
+                Team team = this.teams.remove(player.getUniqueId());
+
+                if (team != null) {
+                    ScoreboardUtils.changePlayerTeam(player, team);
+                }
+            }
+        });
     }
 
     public List<NPCInfo> getNPCs() {

@@ -83,9 +83,6 @@ public class NPCInfo {
     }
 
     public NPC.Builder createBuilder() {
-        if (this.hideNameTag)
-            ScoreboardUtils.createNametagTeam(this.profile.getName(), this.teamName);
-
         return NPC.builder()
                 .location(this.location.getLocation())
                 .profile(this.profile)

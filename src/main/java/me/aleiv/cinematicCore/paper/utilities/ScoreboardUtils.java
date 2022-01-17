@@ -3,6 +3,7 @@ package me.aleiv.cinematicCore.paper.utilities;
 import me.aleiv.cinematicCore.paper.CinematicTool;
 import me.aleiv.cinematicCore.paper.objects.NPCInfo;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
@@ -44,6 +45,27 @@ public class ScoreboardUtils {
             if (team.getName().startsWith("sc_npc_")) {
                 team.unregister();
             }
+        });
+    }
+
+    public static Team getPlayerTeam(Player player) {
+        Scoreboard scoreboard = Bukkit.getScoreboardManager() == null ? null : Bukkit.getScoreboardManager().getMainScoreboard();
+        if (scoreboard == null) return null;
+
+        return scoreboard.getEntryTeam(player.getName());
+    }
+
+    public static void changePlayerTeam(Player player, Team team) {
+        Bukkit.getScheduler().runTaskAsynchronously(CinematicTool.getInstance(), () -> {
+            Scoreboard scoreboard = Bukkit.getScoreboardManager() == null ? null : Bukkit.getScoreboardManager().getMainScoreboard();
+            if (scoreboard == null) return;
+
+            Team oldTeam = scoreboard.getEntryTeam(player.getName());
+            if (oldTeam != null) {
+                oldTeam.removeEntry(player.getName());
+            }
+
+            team.addEntry(player.getName());
         });
     }
 
