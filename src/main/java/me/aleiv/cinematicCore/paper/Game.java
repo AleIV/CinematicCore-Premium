@@ -81,7 +81,7 @@ public class Game {
         List<Integer> list = new ArrayList<>();
 
         if (fade) {
-            sendBlack(uuids);
+            sendBlackWithoutFadeOut(uuids);
 
             task.addWithDelay(new BukkitRunnable() {
                 @Override
@@ -214,8 +214,26 @@ public class Game {
         instance.showTitle(player, black, "", 100, 20, 100);
     }
 
+    public void sendBlackWithoutFadeOut(Player player) {
+        String black = Character.toString('\u3400');
+        instance.showTitle(player, black, "", 100, 20*45, 0);
+    }
+
+    public void sendBlackFadeOut(Player player) {
+        String black = Character.toString('\u3400');
+        instance.showTitle(player, black, "", 0, 0, 100);
+    }
+
     public void sendBlack(List<UUID> players) {
         players.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).forEach(this::sendBlack);
+    }
+
+    public void sendBlackWithoutFadeOut(List<UUID> players) {
+        players.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).forEach(this::sendBlackWithoutFadeOut);
+    }
+
+    public void sendBlackFadeOut(List<UUID> players) {
+        players.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).forEach(this::sendBlackFadeOut);
     }
 
     public void hide(boolean bool) {

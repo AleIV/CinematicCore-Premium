@@ -107,6 +107,8 @@ public class GlobalListener implements Listener {
             });
         }
 
+        this.instance.getGame().sendBlackFadeOut(uuids);
+
         if (game.getAutoHide()) {
             game.hide(true);
         }
