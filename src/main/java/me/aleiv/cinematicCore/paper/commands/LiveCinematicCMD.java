@@ -1,16 +1,24 @@
 package me.aleiv.cinematicCore.paper.commands;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.*;
-import me.aleiv.cinematicCore.paper.CinematicTool;
-import me.aleiv.cinematicCore.paper.objects.LiveCinematicInfo;
+import java.util.List;
+
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
-import java.util.List;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Optional;
+import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.Syntax;
+import me.aleiv.cinematicCore.paper.CinematicTool;
+import me.aleiv.cinematicCore.paper.objects.LiveCinematicInfo;
 
 @CommandAlias("cinematic|c")
 @Subcommand("live")
+@CommandPermission("cinematic.cmd")
 public class LiveCinematicCMD extends BaseCommand {
 
     private final CinematicTool plugin;
