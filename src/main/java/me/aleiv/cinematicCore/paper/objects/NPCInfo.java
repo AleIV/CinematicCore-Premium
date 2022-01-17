@@ -102,4 +102,8 @@ public class NPCInfo {
         this.teamName = "sc_npc_" + UUID.randomUUID().toString().substring(0, 8);
     }
 
+    public void setName(String newName) {
+        this.profile = this.profile.setName(newName);
+    }
+
 }
