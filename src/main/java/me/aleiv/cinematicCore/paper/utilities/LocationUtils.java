@@ -11,11 +11,12 @@ public class LocationUtils {
             loc.add(0, -1, 0);
             if (loc.getBlock().getType().isSolid()) {
                 loc.setY(loc.getBlockY());
-                if (loc.getBlock().getType().toString().contains("SLAB") || loc.getBlock().getType().toString().contains("STAIRS")) {
+                /*if (loc.getBlock().getType().toString().contains("SLAB") || loc.getBlock().getType().toString().contains("STAIRS")) {
                     loc.add(0, 0.5, 0);
                 } else {
                     loc.add(0, 1, 0);
-                }
+                }*/
+                loc.add(0, 1, 0);
                 return loc;
             }
         }
