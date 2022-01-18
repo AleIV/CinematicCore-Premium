@@ -103,18 +103,10 @@ public class DataFile {
         this.data.set(path + "hideNameTag", info.isHideNameTag());
 
         this.saveItems(path, info.getNPCItems());
-
-        this.save();
     }
 
-    public void removeNPC(NPCInfo info) {
-        this.data.set("guards." + info.getUuid().toString(), null);
-        this.save();
-    }
-
-    public void removeNPCs() {
-        this.data.set("guards", null);
-        this.save();
+    public void removeNPC(UUID uuid) {
+        this.data.set("guards." + uuid.toString(), null);
     }
 
     private void saveItems(String unpath, NPCItems items) {

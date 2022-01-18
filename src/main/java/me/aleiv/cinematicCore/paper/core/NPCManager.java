@@ -57,15 +57,16 @@ public class NPCManager implements Listener {
     }
 
     private void saveNPCs() {
-        List<NPCInfo> savedNPCs = new ArrayList<>();
+        List<UUID> npcsToSave = new ArrayList<>();
+        this.npcs.values().stream().filter(NPCInfo::isCache).forEach(info -> npcsToSave.add(info.getUuid()));
         this.npcs.values().forEach(info -> {
-            if (info.isCache()) {
+            if (npcsToSave.contains(info.getUuid())) {
                 this.dataFile.saveNpc(info);
-                savedNPCs.add(info);
+            } else {
+                this.dataFile.removeNPC(info.getUuid());
             }
         });
-
-        this.dataFile.getAllUUIDs().stream().filter(uuid -> savedNPCs.stream().noneMatch(info -> info.getUuid().equals(uuid))).map(uuid -> this.npcsByUUID.get(uuid)).filter(Objects::nonNull).forEach(info -> this.dataFile.removeNPC(info));
+        this.dataFile.save();
     }
 
     public NPC spawnNPC(NPCInfo info) {
@@ -104,14 +105,10 @@ public class NPCManager implements Listener {
     }
 
     public void removeNPC(NPCInfo npcInfo) {
-        ScoreboardUtils.removeNametagTeam(npcInfo.getTeamName());
-
         // reverse lookup for npc
         for (Map.Entry<NPC, NPCInfo> entry : new HashMap<>(this.npcs).entrySet()) {
             if (entry.getValue().equals(npcInfo)) {
-                this.npcPool.removeNPC(entry.getKey().getEntityId());
-                this.npcs.remove(entry.getKey());
-                this.npcsByUUID.remove(npcInfo.getUuid());
+                this.removeNPC(entry.getKey());
             }
         }
     }
