@@ -5,6 +5,7 @@ import com.github.juliarn.npc.NPCPool;
 import com.github.juliarn.npc.event.PlayerNPCShowEvent;
 import com.github.juliarn.npc.modifier.MetadataModifier;
 import com.github.juliarn.npc.modifier.NPCModifier;
+import me.aleiv.cinematicCore.paper.CinematicTool;
 import me.aleiv.cinematicCore.paper.files.DataFile;
 import me.aleiv.cinematicCore.paper.objects.NPCInfo;
 import me.aleiv.cinematicCore.paper.utilities.ScoreboardUtils;
@@ -57,15 +58,8 @@ public class NPCManager implements Listener {
     }
 
     private void saveNPCs() {
-        List<UUID> npcsToSave = new ArrayList<>();
-        this.npcs.values().stream().filter(NPCInfo::isCache).forEach(info -> npcsToSave.add(info.getUuid()));
-        this.npcs.values().forEach(info -> {
-            if (npcsToSave.contains(info.getUuid())) {
-                this.dataFile.saveNpc(info);
-            } else {
-                this.dataFile.removeNPC(info.getUuid());
-            }
-        });
+        this.dataFile.getAllUUIDs().forEach(uuid -> this.dataFile.removeNPC(uuid));
+        this.npcs.values().stream().filter(NPCInfo::isCache).forEach(info -> this.dataFile.saveNpc(info));
         this.dataFile.save();
     }
 
@@ -141,6 +135,7 @@ public class NPCManager implements Listener {
 
     @EventHandler
     public void onDisable(PluginDisableEvent e) {
+        if (!e.getPlugin().getName().equalsIgnoreCase(CinematicTool.getInstance().getName())) return;
         this.saveNPCs();
         new ArrayList<>(this.npcs.keySet()).forEach(this::removeNPC);
         ScoreboardUtils.removeAllTeams();

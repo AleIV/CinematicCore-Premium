@@ -137,7 +137,6 @@ public class DataFile {
     public NPCInfo getNPC(UUID uuid) {
         String path = "guards." + uuid.toString() + ".";
         if (this.data.contains(path)) {
-
             Profile profile = new Profile(UUID.fromString(this.data.getString(path + "uuid")), this.data.getString(path + "name"), List.of(new Profile.Property("textures", this.data.getString(path + "texture"), this.data.getString(path + "signature"))));
 
             return new NPCInfo(
