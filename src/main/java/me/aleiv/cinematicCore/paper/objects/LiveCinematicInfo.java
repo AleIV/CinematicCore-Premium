@@ -2,6 +2,10 @@ package me.aleiv.cinematicCore.paper.objects;
 
 import com.github.juliarn.npc.NPC;
 import me.aleiv.cinematicCore.paper.CinematicTool;
+import me.aleiv.cinematicCore.paper.events.LiveCinematicPlayerRemoveEvent;
+import me.aleiv.cinematicCore.paper.events.LiveCinematicPlayerRegisterEvent;
+import me.aleiv.cinematicCore.paper.events.LiveCinematicStartEvent;
+import me.aleiv.cinematicCore.paper.events.LiveCinematicStopEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -38,6 +42,8 @@ public class LiveCinematicInfo {
         this.running = true;
 
         this.registerPlayer(this.getParentPlayer());
+
+        Bukkit.getPluginManager().callEvent(new LiveCinematicStartEvent(this));
     }
 
     public void addPlayer(Player player, boolean force) {
@@ -73,6 +79,8 @@ public class LiveCinematicInfo {
         if (p != null) {
             player.teleport(p.getLocation());
         }
+
+        Bukkit.getPluginManager().callEvent(new LiveCinematicPlayerRegisterEvent(player, this));
     }
 
     public void removePlayer(Player player) {
@@ -101,6 +109,8 @@ public class LiveCinematicInfo {
         if (gm != null) {
             player.setGameMode(gm);
         }
+
+        Bukkit.getPluginManager().callEvent(new LiveCinematicPlayerRemoveEvent(player, this));
     }
 
     public boolean isPlayerParent(UUID uuid) {
@@ -133,6 +143,8 @@ public class LiveCinematicInfo {
             this.npcsHashMap.clear();
             this.locationsHashMap.clear();
             this.gamemodesHashMap.clear();
+
+            Bukkit.getPluginManager().callEvent(new LiveCinematicStopEvent(this));
         }, 110L);
     }
 
