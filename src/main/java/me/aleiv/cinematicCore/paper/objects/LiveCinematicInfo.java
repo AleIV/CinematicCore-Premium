@@ -2,8 +2,8 @@ package me.aleiv.cinematicCore.paper.objects;
 
 import com.github.juliarn.npc.NPC;
 import me.aleiv.cinematicCore.paper.CinematicTool;
-import me.aleiv.cinematicCore.paper.events.LiveCinematicPlayerRemoveEvent;
 import me.aleiv.cinematicCore.paper.events.LiveCinematicPlayerRegisterEvent;
+import me.aleiv.cinematicCore.paper.events.LiveCinematicPlayerRemoveEvent;
 import me.aleiv.cinematicCore.paper.events.LiveCinematicStartEvent;
 import me.aleiv.cinematicCore.paper.events.LiveCinematicStopEvent;
 import org.bukkit.Bukkit;
