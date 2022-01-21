@@ -12,7 +12,7 @@ public class LiveCinematicPlayerRegisterEvent extends PlayerEvent {
 
     private final @Getter HandlerList Handlers = HandlerList;
     private final @Getter LiveCinematicInfo liveCinematicInfo;
-    private final @Getter Player player;
+    private final Player player;
 
 
     public LiveCinematicPlayerRegisterEvent(Player player, LiveCinematicInfo liveCinematicInfo) {
