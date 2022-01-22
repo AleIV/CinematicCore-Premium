@@ -154,10 +154,6 @@ public class Game {
         completable.thenAccept(bool -> {
             cinematicProgressList.remove(actualCinematic);
             Bukkit.getScheduler().runTask(instance, Btask -> {
-                Bukkit.getOnlinePlayers().forEach(player -> {
-                    Scoreboard scoreboard = player.getScoreboard();
-                    scoreboard.getTeams().stream().filter(team -> team.getName().startsWith("sb_npc_")).forEach(Team::unregister);
-                });
                 Bukkit.getPluginManager().callEvent(new CinematicFinishEvent(actualCinematic, false));
             });
         });
