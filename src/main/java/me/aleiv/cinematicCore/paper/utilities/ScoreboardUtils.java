@@ -30,7 +30,7 @@ public class ScoreboardUtils {
             Scoreboard sc = scm.getMainScoreboard();
 
             Team team = sc.getTeam(teamName);
-            if (team != null && team.getName().equals("sc_npc_")) {
+            if (team != null && team.getName().startsWith("sc_npc_")) {
                 team.unregister();
             }
         });
